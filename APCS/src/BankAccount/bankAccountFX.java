@@ -1,6 +1,7 @@
 package BankAccount;
 
 import javafx.application.*;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -10,13 +11,17 @@ import javafx.stage.*;
 
 public class bankAccountFX extends Application {
 	
-	public static String name;
+	public static StringProperty name;
 	
 	public void start(Stage s) throws Exception {
 		Button b1 = new Button("Create new bank account");
 		b1.setOnAction(e -> {
 			createAccount.open();
 			b1.setText("Rename account " + name + ".");
+		});
+		
+		name.addListener((obs,oldvariable,newvariable) -> {
+			
 		});
 		
 		Button b2 = new Button("Withdraw");

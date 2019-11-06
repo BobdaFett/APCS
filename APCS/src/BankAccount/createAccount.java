@@ -24,6 +24,10 @@ public class createAccount {
 			create.close();
 		}); 
 		
+		Scene base = new Scene(new HBox(b1, b2));
+		
+		create.setScene(base);
+		
 		create.show();
 	}
 	
@@ -31,12 +35,13 @@ public class createAccount {
 		TextArea ta = new TextArea();
 		
 		Button affirm = new Button("Submit");
+		affirm.setOnAction(e -> {
+			bankAccountFX.name.set(ta.getText());
+		});
 		
 		Scene sc = new Scene(new HBox(ta, affirm));
 		
 		ta.setText("Enter a new name...");
-		
-		bankAccountFX.name = ta.getText();
 		
 		create.setScene(sc);
 	}
