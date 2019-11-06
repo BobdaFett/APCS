@@ -32,14 +32,17 @@ public class createAccount {
 		create.show();
 	}
 	
-	private static void create() {
+	public static void create() {
 		TextArea ta = new TextArea();
 		
 		Button affirm = new Button("Submit");
 		affirm.setOnAction(e -> {
 			//bankAccountFX.nameTest.set(ta.getText());
 			bankAccountFX.name = ta.getText();
-			bankAccountFX.rename = new Button("Rename account " + bankAccountFX.name);
+			bankAccountFX.rename.setText("Rename account " + bankAccountFX.name);
+			bankAccountFX.rename.setOnAction(f -> {
+				renameFX.open();
+			});
 			bankAccountFX.hb.getChildren().clear();
 			bankAccountFX.hb.getChildren().addAll(bankAccountFX.rename, bankAccountFX.b2);
 			create.close();

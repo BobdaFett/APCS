@@ -32,23 +32,19 @@ public class bankAccountFX extends Application {
 			//b1.setText("Rename account " + name + ".");
 		});
 		
+		rename = new Button();
 		rename.setOnAction(e -> {
 			renameFX.open();
 		});
 		
 		b2 = new Button("Withdraw");
 		b2.setOnAction(e -> {
-			
+			withdrawFX.open();
 		});
 		
 		b3 = new Button("Deposit");
 		b3.setOnAction(e -> {
-			
-		});
-		
-		b4 = new Button("");
-		b4.setOnAction(e -> {
-			
+			depositFX.open();
 		});
 		
 		hb = new HBox(b1, b2);
