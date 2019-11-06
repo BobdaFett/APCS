@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 public class createAccount {
 
 	private static Stage create;
+	private static Scene base;
 	
 	public static void open() {
 		// TODO Auto-generated method stub
@@ -24,7 +25,7 @@ public class createAccount {
 			create.close();
 		}); 
 		
-		Scene base = new Scene(new HBox(b1, b2));
+		base = new Scene(new HBox(b1, b2));
 		
 		create.setScene(base);
 		
@@ -36,12 +37,17 @@ public class createAccount {
 		
 		Button affirm = new Button("Submit");
 		affirm.setOnAction(e -> {
-			bankAccountFX.name.set(ta.getText());
+			//bankAccountFX.nameTest.set(ta.getText());
+			bankAccountFX.name = ta.getText();
+			bankAccountFX.rename = new Button("Rename account " + bankAccountFX.name);
+			bankAccountFX.hb.getChildren().clear();
+			bankAccountFX.hb.getChildren().addAll(bankAccountFX.rename, bankAccountFX.b2);
+			create.close();
 		});
 		
 		Scene sc = new Scene(new HBox(ta, affirm));
 		
-		ta.setText("Enter a new name...");
+		ta.setPromptText("Enter a new name...");
 		
 		create.setScene(sc);
 	}
