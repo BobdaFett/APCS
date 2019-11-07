@@ -23,8 +23,10 @@ public class bankAccountFX extends Application {
 	public static HBox hb2;
 	public static VBox vb;
 	public static Scene sc;
+	public static Stage stage;
 	
 	public void start(Stage s) throws Exception {
+		stage = new Stage();
 		
 		b1 = new Button("Create new bank account");
 		b1.setOnAction(e -> {
@@ -47,20 +49,24 @@ public class bankAccountFX extends Application {
 			depositFX.open();
 		});
 		
-		hb = new HBox(b1, b2);
+		b4 = new Button("Exit");
+		b4.setOnAction(e -> {
+			s.close();
+		});
 		
-		hb2 = new HBox(b3);
+		hb = new HBox(20, b1, b2);
 		
-		vb = new VBox(hb, hb2);
+		hb2 = new HBox(20, b3);
 		
-		sc = new Scene(vb);
-		s.setScene(sc);
-		s.setMaximized(true);
-		s.show();
+		vb = new VBox(20, hb, hb2);
+		
+		sc = new Scene(vb, 300, 100);
+		stage.setScene(sc);
+		stage.show();
 		
 	}
 	
-	public static void main(String[] args) {
+	public void main(String[] args) {
 		Application.launch();
 	}
 	
