@@ -22,7 +22,7 @@ public class createAccount {
 		
 		Button b2 = new Button("Back to menu...");
 		b2.setOnAction(e -> {
-			bankAccountFX.main();
+			bankAccountFX.main(null);
 		}); 
 		
 		base = new Scene(new HBox(b1, b2));
