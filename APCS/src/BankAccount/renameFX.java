@@ -9,34 +9,31 @@ import javafx.scene.text.Text;
 
 public class renameFX {
 	
-	private static Stage ren;
-	private static Scene renSC;
+	private static Scene rename;
 	private static TextArea ta;
 	private static Text t;
 	
-	public static void open() {
-		ren = new Stage();
+	public static void rename() {
+		TextArea ta = new TextArea();
 		
-		t = new Text("Enter a new name for the account: ");
-		
-		ta = new TextArea();
-		ta.setPromptText("Enter a new name...");
-		
-		Button b1 = new Button("Submit");
-		b1.setOnAction(e -> {
+		Button affirm = new Button("Submit");
+		affirm.setOnAction(e -> {
+			//bankAccountFX.nameTest.set(ta.getText());
 			bankAccountFX.name = ta.getText();
+			bankAccountFX.rename.setText("Rename account " + bankAccountFX.name);
+			bankAccountFX.rename.setOnAction(f -> {
+				renameFX.rename();
+			});
 			bankAccountFX.hb.getChildren().clear();
-			bankAccountFX.hb.getChildren().addAll(bankAccountFX.b1, bankAccountFX.b2);
+			bankAccountFX.hb.getChildren().addAll(bankAccountFX.rename, bankAccountFX.b2);
+			bankAccountFX.stage.setScene(bankAccountFX.base);
 		});
 		
-		renSC = new Scene(new HBox(50, b1, ta));
+		rename = new Scene(new HBox(ta, affirm));
 		
-		ren.setScene(renSC);
+		ta.setPromptText("Enter a new name...");
 		
-		ren.show();
-	}
-	
-	public static void rename() {
+		bankAccountFX.stage.setScene(rename);
 		
 	}
 	

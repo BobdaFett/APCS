@@ -7,28 +7,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class createAccount {
-
-	private static Stage create;
-	private static Scene base;
 	
-	public static void open() {
-		// TODO Auto-generated method stub
-		create = new Stage();
-		
-		Button b1 = new Button("Create a new account");
-		b1.setOnAction(e -> {
-			create();
-		});
-		
-		Button b2 = new Button("Back to menu...");
-		b2.setOnAction(e -> {
-			bankAccountFX.main(null);
-		}); 
-		
-		base = new Scene(new HBox(b1, b2));
-		
-		bankAccountFX.stage.setScene(base);
-	}
+	private static Scene create;
 	
 	public static void create() {
 		TextArea ta = new TextArea();
@@ -39,18 +19,33 @@ public class createAccount {
 			bankAccountFX.name = ta.getText();
 			bankAccountFX.rename.setText("Rename account " + bankAccountFX.name);
 			bankAccountFX.rename.setOnAction(f -> {
-				renameFX.open();
+				renameFX.rename();
 			});
+			setBalance();
 			bankAccountFX.hb.getChildren().clear();
 			bankAccountFX.hb.getChildren().addAll(bankAccountFX.rename, bankAccountFX.b2);
-			create.close();
+			bankAccountFX.stage.setScene(bankAccountFX.base);
 		});
 		
-		Scene sc = new Scene(new HBox(ta, affirm));
+		create = new Scene(new HBox(ta, affirm));
 		
 		ta.setPromptText("Enter a new name...");
 		
-		create.setScene(sc);
+		bankAccountFX.stage.setScene(create);
+	}
+	
+	public static void setBalance() {
+		TextArea ta2 = new TextArea();
+		
+		Button affirmBalance = new Button("Submit");
+		affirmBalance.setOnAction(e -> {
+			
+			reset();
+		});
+	}
+	
+	public static void reset() {
+		bankAccountFX.stage.setScene(bankAccountFX.base);
 	}
 
 }

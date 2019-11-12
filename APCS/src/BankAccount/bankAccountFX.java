@@ -1,7 +1,9 @@
 package BankAccount;
 
 import javafx.application.*;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -14,6 +16,8 @@ public class bankAccountFX extends Application {
 	
 	public static StringProperty nameTest;
 	public static String name;
+	public static ObservableValue<Integer> balance; //to subtract you need to use toString()
+	public static Text currentBalance;
 	public static Button b1;
 	public static Button b2;
 	public static Button b3;
@@ -22,21 +26,28 @@ public class bankAccountFX extends Application {
 	public static HBox hb;
 	public static HBox hb2;
 	public static VBox vb;
-	public static Scene sc;
+	public static Scene base;
 	public static Stage stage;
 	
 	public void start(Stage s) throws Exception {
 		stage = new Stage();
 		
+		currentBalance = new Text();
+		balance = new SimpleIntegerProperty(0).asObject();
+		
+		balance.addListener((obs, oldv, newv) -> {
+			currentBalance.setText(balance.toString());
+		});
+		
 		b1 = new Button("Create new bank account");
 		b1.setOnAction(e -> {
-			createAccount.open();
+			createAccount.create();
 			//b1.setText("Rename account " + name + ".");
 		});
 		
 		rename = new Button();
 		rename.setOnAction(e -> {
-			renameFX.open();
+			renameFX.rename();
 		});
 		
 		b2 = new Button("Withdraw");
@@ -58,10 +69,10 @@ public class bankAccountFX extends Application {
 		
 		hb2 = new HBox(20, b3);
 		
-		vb = new VBox(20, hb, hb2);
+		vb = new VBox(20, currentBalance, hb, hb2);
 		
-		sc = new Scene(vb, 300, 100);
-		stage.setScene(sc);
+		base = new Scene(vb, 300, 150);
+		stage.setScene(base);
 		stage.show();
 		
 	}
