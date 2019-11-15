@@ -21,7 +21,6 @@ public class createAccount {
 			bankAccountFX.rename.setOnAction(f -> {
 				renameFX.rename();
 			});
-			setBalance();
 			bankAccountFX.hb.getChildren().clear();
 			bankAccountFX.hb.getChildren().addAll(bankAccountFX.rename, bankAccountFX.b2);
 			bankAccountFX.stage.setScene(bankAccountFX.base);
@@ -32,16 +31,6 @@ public class createAccount {
 		ta.setPromptText("Enter a new name...");
 		
 		bankAccountFX.stage.setScene(create);
-	}
-	
-	public static void setBalance() {
-		TextArea ta2 = new TextArea();
-		
-		Button affirmBalance = new Button("Submit");
-		affirmBalance.setOnAction(e -> {
-			
-			reset();
-		});
 	}
 	
 	public static void reset() {

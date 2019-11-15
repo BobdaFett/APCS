@@ -7,6 +7,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.*;
@@ -16,7 +18,7 @@ public class bankAccountFX extends Application {
 	
 	public static StringProperty nameTest;
 	public static String name;
-	public static ObservableValue<Integer> balance; //to subtract you need to use toString()
+	public static double balance;
 	public static Text currentBalance;
 	public static Button b1;
 	public static Button b2;
@@ -32,46 +34,39 @@ public class bankAccountFX extends Application {
 	public void start(Stage s) throws Exception {
 		stage = new Stage();
 		
-		currentBalance = new Text();
-		balance = new SimpleIntegerProperty(0).asObject();
-		
-		balance.addListener((obs, oldv, newv) -> {
-			currentBalance.setText(balance.toString());
-		});
+		currentBalance = new Text("Your current balance is $0.00");
 		
 		b1 = new Button("Create new bank account");
-		b1.setOnAction(e -> {
-			createAccount.create();
-			//b1.setText("Rename account " + name + ".");
-		});
+		b1.setOnAction(e -> { createAccount.create(); });
 		
 		rename = new Button();
-		rename.setOnAction(e -> {
-			renameFX.rename();
-		});
+		rename.setOnAction(e -> { renameFX.rename(); });
 		
 		b2 = new Button("Withdraw");
-		b2.setOnAction(e -> {
-			withdrawFX.open();
-		});
+		b2.setOnAction(e -> { withdrawFX.open(); });
 		
 		b3 = new Button("Deposit");
-		b3.setOnAction(e -> {
-			depositFX.open();
-		});
+		b3.setOnAction(e -> { depositFX.open(); });
 		
 		b4 = new Button("Exit");
-		b4.setOnAction(e -> {
-			s.close();
-		});
+		b4.setOnAction(e -> { s.close(); });
 		
-		hb = new HBox(20, b1, b2);
+		Region r = new Region();
+		VBox.setVgrow(r, Priority.ALWAYS); //will take up as much space in a VBox
 		
-		hb2 = new HBox(20, b3);
+		Region r2 = new Region();
+		HBox.setHgrow(r2, Priority.ALWAYS); //will take up as much space in an HBox
 		
-		vb = new VBox(20, currentBalance, hb, hb2);
+		Region r3 = new Region();
+		VBox.setVgrow(r2, Priority.ALWAYS);
 		
-		base = new Scene(vb, 300, 150);
+		hb = new HBox(b1, r2, b2);
+		
+		hb2 = new HBox(b3);
+		
+		vb = new VBox(currentBalance, r3, hb, r, hb2);
+		
+		base = new Scene(vb, 300, 90);
 		stage.setScene(base);
 		stage.show();
 		
