@@ -6,6 +6,9 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.Mnemonic;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -25,6 +28,7 @@ public class bankAccountFX extends Application {
 	public static Button b3;
 	public static Button b4;
 	public static Button rename;
+	public static Region r2;
 	public static HBox hb;
 	public static HBox hb2;
 	public static VBox vb;
@@ -36,29 +40,29 @@ public class bankAccountFX extends Application {
 		
 		currentBalance = new Text("Your current balance is $0.00");
 		
-		b1 = new Button("Create new bank account");
+		b1 = new Button("_Create new bank account");
 		b1.setOnAction(e -> { createAccount.create(); });
 		
 		rename = new Button();
 		rename.setOnAction(e -> { renameFX.rename(); });
 		
-		b2 = new Button("Withdraw");
+		b2 = new Button("_Withdraw");
 		b2.setOnAction(e -> { withdrawFX.open(); });
 		
-		b3 = new Button("Deposit");
+		b3 = new Button("_Deposit");
 		b3.setOnAction(e -> { depositFX.open(); });
 		
-		b4 = new Button("Exit");
+		b4 = new Button("_Exit");
 		b4.setOnAction(e -> { s.close(); });
 		
 		Region r = new Region();
 		VBox.setVgrow(r, Priority.ALWAYS); //will take up as much space in a VBox
 		
-		Region r2 = new Region();
+		r2 = new Region();
 		HBox.setHgrow(r2, Priority.ALWAYS); //will take up as much space in an HBox
 		
 		Region r3 = new Region();
-		VBox.setVgrow(r2, Priority.ALWAYS);
+		VBox.setVgrow(r3, Priority.ALWAYS);
 		
 		hb = new HBox(b1, r2, b2);
 		
@@ -67,6 +71,7 @@ public class bankAccountFX extends Application {
 		vb = new VBox(currentBalance, r3, hb, r, hb2);
 		
 		base = new Scene(vb, 300, 90);
+		
 		stage.setScene(base);
 		stage.show();
 		

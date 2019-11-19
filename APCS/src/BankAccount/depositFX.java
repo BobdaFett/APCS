@@ -16,7 +16,7 @@ public class depositFX {
 		TextArea ta = new TextArea();
 		ta.setPromptText("Enter your new balance...");
 		
-		Button affirm = new Button("Submit");
+		Button affirm = new Button("_Submit");
 		affirm.setOnAction(e -> {
 			
 			try {

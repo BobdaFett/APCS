@@ -11,21 +11,19 @@ public class renameFX {
 	
 	private static Scene rename;
 	private static TextArea ta;
-	private static Text t;
 	
 	public static void rename() {
-		TextArea ta = new TextArea();
+		ta = new TextArea();
 		
 		Button affirm = new Button("Submit");
 		affirm.setOnAction(e -> {
-			//bankAccountFX.nameTest.set(ta.getText());
 			bankAccountFX.name = ta.getText();
 			bankAccountFX.rename.setText("Rename account " + bankAccountFX.name);
 			bankAccountFX.rename.setOnAction(f -> {
 				renameFX.rename();
 			});
 			bankAccountFX.hb.getChildren().clear();
-			bankAccountFX.hb.getChildren().addAll(bankAccountFX.rename, bankAccountFX.b2);
+			bankAccountFX.hb.getChildren().addAll(bankAccountFX.rename, bankAccountFX.r2, bankAccountFX.b2);
 			bankAccountFX.stage.setScene(bankAccountFX.base);
 		});
 		
