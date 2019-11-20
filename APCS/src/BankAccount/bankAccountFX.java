@@ -1,23 +1,20 @@
 package BankAccount;
 
-import javafx.application.*;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.application.Application;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.Mnemonic;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.*;
+import javafx.stage.Stage;
 
 @SuppressWarnings("exports")
 public class bankAccountFX extends Application {
+	
+	//TODO GridPanes
 	
 	public static StringProperty nameTest;
 	public static String name;
@@ -28,7 +25,9 @@ public class bankAccountFX extends Application {
 	public static Button b3;
 	public static Button b4;
 	public static Button rename;
-	public static Region r2;
+	public static Region VBoxRegion;
+	public static Region VBoxRegion2;
+	public static Region HBoxRegion;
 	public static HBox hb;
 	public static HBox hb2;
 	public static VBox vb;
@@ -55,22 +54,22 @@ public class bankAccountFX extends Application {
 		b4 = new Button("_Exit");
 		b4.setOnAction(e -> { s.close(); });
 		
-		Region r = new Region();
-		VBox.setVgrow(r, Priority.ALWAYS); //will take up as much space in a VBox
+		VBoxRegion = new Region();
+		VBox.setVgrow(VBoxRegion, Priority.ALWAYS); //will take up as much space in a VBox
 		
-		r2 = new Region();
-		HBox.setHgrow(r2, Priority.ALWAYS); //will take up as much space in an HBox
+		VBoxRegion2 = new Region();
+		VBox.setVgrow(VBoxRegion2, Priority.ALWAYS);
 		
-		Region r3 = new Region();
-		VBox.setVgrow(r3, Priority.ALWAYS);
+		HBoxRegion = new Region();
+		HBox.setHgrow(HBoxRegion, Priority.ALWAYS); //will take up as much space in an HBox
 		
-		hb = new HBox(b1, r2, b2);
+		hb = new HBox(50, b1, b2, HBoxRegion);
 		
 		hb2 = new HBox(b3);
 		
-		vb = new VBox(currentBalance, r3, hb, r, hb2);
+		vb = new VBox(currentBalance, VBoxRegion, hb, VBoxRegion2, hb2);
 		
-		base = new Scene(vb, 300, 90);
+		base = new Scene(vb, 350, 90);
 		
 		stage.setScene(base);
 		stage.show();

@@ -23,9 +23,11 @@ public class renameFX {
 				renameFX.rename();
 			});
 			bankAccountFX.hb.getChildren().clear();
-			bankAccountFX.hb.getChildren().addAll(bankAccountFX.rename, bankAccountFX.r2, bankAccountFX.b2);
+			bankAccountFX.hb.getChildren().addAll(bankAccountFX.rename, bankAccountFX.HBoxRegion, bankAccountFX.b2);
 			bankAccountFX.stage.setScene(bankAccountFX.base);
 		});
+		
+		affirm.setDefaultButton(true);
 		
 		rename = new Scene(new HBox(ta, affirm));
 		
