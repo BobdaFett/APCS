@@ -69,7 +69,7 @@ public class bankAccountFX extends Application {
 		
 		vb = new VBox(currentBalance, VBoxRegion, hb, VBoxRegion2, hb2);
 		
-		base = new Scene(vb, 350, 90);
+		base = new Scene(vb);
 		
 		stage.setScene(base);
 		stage.show();
