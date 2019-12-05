@@ -2,8 +2,11 @@ package BankAccount;
 
 import javafx.application.Application;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -25,14 +28,9 @@ public class bankAccountFX extends Application {
 	public static Button b3;
 	public static Button b4;
 	public static Button rename;
-	public static Region VBoxRegion;
-	public static Region VBoxRegion2;
-	public static Region HBoxRegion;
-	public static HBox hb;
-	public static HBox hb2;
-	public static VBox vb;
 	public static Scene base;
 	public static Stage stage;
+	public static GridPane gp;
 	
 	public void start(Stage s) throws Exception {
 		stage = new Stage();
@@ -40,7 +38,7 @@ public class bankAccountFX extends Application {
 		currentBalance = new Text("Your current balance is $0.00");
 		
 		b1 = new Button("_Create new bank account");
-		b1.setOnAction(e -> { createAccount.create(); });
+		b1.setOnAction(e -> { createAccount(); });
 		
 		rename = new Button();
 		rename.setOnAction(e -> { renameFX.rename(); });
@@ -54,26 +52,51 @@ public class bankAccountFX extends Application {
 		b4 = new Button("_Exit");
 		b4.setOnAction(e -> { s.close(); });
 		
-		VBoxRegion = new Region();
-		VBox.setVgrow(VBoxRegion, Priority.ALWAYS); //will take up as much space in a VBox
+		gp = new GridPane();
+		gp.add(b1, 0, 0);
+		gp.add(b2, 1, 0);
+		gp.add(b3, 0, 1);
+		gp.add(b4, 1, 1);
 		
-		VBoxRegion2 = new Region();
-		VBox.setVgrow(VBoxRegion2, Priority.ALWAYS);
+		gp.setPadding(new Insets(15));
+		gp.setVgap(10);
+		gp.setHgap(10);
 		
-		HBoxRegion = new Region();
-		HBox.setHgrow(HBoxRegion, Priority.ALWAYS); //will take up as much space in an HBox
-		
-		hb = new HBox(50, b1, b2, HBoxRegion);
-		
-		hb2 = new HBox(b3);
-		
-		vb = new VBox(currentBalance, VBoxRegion, hb, VBoxRegion2, hb2);
-		
-		base = new Scene(vb);
+		base = new Scene(gp);
 		
 		stage.setScene(base);
 		stage.show();
 		
+	}
+	
+	public static void createAccount() {
+		TextArea ta = new TextArea();
+		
+		Button affirm = new Button("_Submit");
+		affirm.setOnAction(e -> {
+			bankAccountFX.name = ta.getText();
+			rename.setText("_Rename account " + bankAccountFX.name);
+			rename.setOnAction(f -> {
+				renameFX.rename();
+			});
+			gp.getChildren().remove(b1);
+			gp.add(rename, 0, 0);
+			stage.setScene(base);
+		});
+		
+		affirm.setDefaultButton(true);
+		
+		
+		
+		GridPane createGP = new GridPane();
+		createGP.add(affirm, 0, 2);
+		createGP.add(ta, 0, 0);
+		
+		Scene create = new Scene(createGP);
+		
+		ta.setPromptText("Enter a new name...");
+		
+		stage.setScene(create);
 	}
 	
 	public static void main(String[] args) {
