@@ -1,27 +1,37 @@
 package BankAccount;
 
+import java.text.DecimalFormat;
+import java.util.Optional;
+
 import javafx.application.Application;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+/**
+ * 
+ * Working on changing the entire program to be able to create and manage multiple bank accounts,
+ * while also being able to take those accounts and transfer money between them.
+ * 
+ * Overall, most basic functionality is finished, and you are able to create and manage a single bank account.
+ * 
+ * @author BobdaFett
+ */
 
 @SuppressWarnings("exports")
 public class bankAccountFX extends Application {
 	
-	//TODO GridPanes
-	
 	public static StringProperty nameTest;
-	public static String name;
-	public static double balance;
+	public static String name = "";
+	public static double balance = 0;
 	public static Text currentBalance;
 	public static Button b1;
 	public static Button b2;
@@ -44,13 +54,33 @@ public class bankAccountFX extends Application {
 		renameButton.setOnAction(e -> { rename(); });
 		
 		b2 = new Button("_Withdraw");
-		b2.setOnAction(e -> { withdrawFX.open(); });
+		b2.setOnAction(e -> { 
+			
+			if(name.length() == 0) {
+				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
+			} else {
+				withdraw(); 
+			}
+			
+		});
 		
 		b3 = new Button("_Deposit");
-		b3.setOnAction(e -> { depositFX.open(); });
+		b3.setOnAction(e -> {
+			if(name.length() == 0) {
+				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
+			} else {
+				deposit(); 
+			}
+		});
 		
-		b4 = new Button("_Exit");
-		b4.setOnAction(e -> { s.close(); });
+		b4 = new Button("Show Balance");
+		b4.setOnAction(e -> {
+			if(name.length() == 0) {
+				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
+			} else {
+				showBalance(); 
+			}
+		});
 		
 		gp = new GridPane();
 		gp.add(b1, 0, 0);
@@ -70,64 +100,123 @@ public class bankAccountFX extends Application {
 	}
 	
 	public static void createAccount() {
-		TextArea ta = new TextArea();
-		ta.setPrefHeight(12);
-		ta.setPrefWidth(235);
 		
+		TextInputDialog create = new TextInputDialog();
+		create.setTitle("Create an Account");
+		create.setHeaderText("Account Creation");
+		create.setContentText("Enter the account name:");
 		
-		Button affirm = new Button("_Submit");
-		affirm.setOnAction(e -> {
-			name = ta.getText();
-			renameButton.setText("_Rename account " + name);
+		Optional<String> accName = create.showAndWait(); //waits until the user exits the dialog, and then queries the "ifPresent" method. if there's nothing there, it does nothing.
+		accName.ifPresent(e -> {
+			name = accName.get();
+			renameButton.setText("Rename account " + name);
 			gp.getChildren().remove(b1);
 			gp.add(renameButton, 0, 0);
 			stage.setScene(base);
 		});
 		
-		affirm.setDefaultButton(true);
-		
-		GridPane createGP = new GridPane();
-		createGP.setPadding(new Insets(10));
-		createGP.setVgap(5);
-		createGP.setHgap(7);
-		
-		createGP.add(affirm, 1, 0);
-		createGP.add(ta, 0, 0);
-		
-		Scene create = new Scene(createGP, 315, 55);
-		
-		ta.setPromptText("Enter a new name...");
-		
-		stage.setScene(create);
 	}
 	
 	public static void rename() {
-		TextArea renameTA = new TextArea();
-		renameTA.setPromptText("Enter a new name...");
-		renameTA.setPrefHeight(12);
-		renameTA.setPrefWidth(235);
 		
-		Button affirm = new Button("Submit");
-		affirm.setDefaultButton(true);
-		affirm.setOnAction(e -> {
-			name = renameTA.getText();
+		TextInputDialog rename = new TextInputDialog();
+		rename.setTitle("Rename Account");
+		rename.setHeaderText("Rename your account " + name);
+		rename.setContentText("Enter your new account name:");
+		
+		Optional<String> accName = rename.showAndWait();
+		accName.ifPresent(e -> {
+			name = accName.get();
 			renameButton.setText("Rename account " + name);
 			gp.getChildren().remove(renameButton);
 			gp.add(renameButton, 0, 0);
 			stage.setScene(base);
 		});
 		
-		GridPane renameGP = new GridPane();
-		renameGP.setPadding(new Insets(10));
-		renameGP.setVgap(5);
-		renameGP.setHgap(7);
+	}
+	
+	public static void withdraw() {
+	
+		TextInputDialog withdraw = new TextInputDialog();
+		withdraw.setTitle("Withdraw");
+		withdraw.setHeaderText("Withdraw Money");
+		withdraw.setContentText("Enter the amount to withdraw:");
 		
-		renameGP.add(renameTA, 0, 0);
-		renameGP.add(affirm, 0, 1);
+		Optional<String> amount = withdraw.showAndWait();
+		amount.ifPresent(e -> {
+			try {
+				double temp = Double.parseDouble(amount.get());
+				
+				if(temp < 0) {
+					errorWindow("Function Mismatch", "Please use the deposit function for this.");
+				} else if((balance-temp) < 0) {
+					Alert overdraft = new Alert(AlertType.CONFIRMATION);
+					overdraft.setTitle("Overdraft Confirmation");
+					overdraft.setContentText("Are you sure you want to take out this amount?\nIt will apply an overdraft fee of $35 to your account " + name);
+					
+					Optional<ButtonType> affirm = overdraft.showAndWait();
+					if(affirm.get() == ButtonType.OK) {
+						balance -= temp + 35;
+					} else {
+						withdraw();
+					}
+				} else {
+					balance += temp;
+				}
+			} catch (Exception f) {
+				errorWindow("Not a number", "Please enter a valid number for your withdrawal.");
+				withdraw();
+			}
+		});
 		
-		Scene renameSC = new Scene(renameGP);
+	}
+	
+	public static void deposit() {
 		
-		stage.setScene(renameSC);
+		TextInputDialog deposit = new TextInputDialog();
+		deposit.setTitle("Deposit");
+		deposit.setHeaderText("Deposit Money");
+		deposit.setContentText("Enter the amount to deposit:");
+		
+		Optional<String> amount = deposit.showAndWait();
+		amount.ifPresent(e -> {
+			try {
+				double temp = Double.parseDouble(amount.get());
+				
+				if(temp < 0) {
+					errorWindow("Function Mismatch", "Please use the withdraw function for this.");
+				} else {
+					balance += temp;
+				}
+			} catch(Exception f) {
+				errorWindow("Unknown Error", "Please try again.");
+				deposit();
+			}
+		});
+	}
+	
+	public static void showBalance() {
+		DecimalFormat df = new DecimalFormat("#.00");
+		
+		Alert balanceWindow = new Alert(AlertType.INFORMATION);
+		
+		balanceWindow.setTitle("Balance");
+		balanceWindow.setHeaderText(null);
+		if(balance == 0) {
+			balanceWindow.setContentText("You have no balance. Use the deposit function to add more.");
+		} else {
+			balanceWindow.setContentText("You have a balance of $" + df.format(balance));
+		}
+		
+		balanceWindow.showAndWait();
+	}
+	
+	public static void errorWindow(String errorType, String message) { //error window method
+		Alert error = new Alert(AlertType.ERROR);
+		error.setHeaderText(errorType);
+		error.setContentText(message);
+		
+		error.showAndWait();
 	}
 	
 	public static void main(String[] args) {
