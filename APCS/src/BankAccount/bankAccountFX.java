@@ -1,10 +1,10 @@
 package BankAccount;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.application.Application;
-import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -13,13 +13,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
  * 
  * Working on changing the entire program to be able to create and manage multiple bank accounts,
  * while also being able to take those accounts and transfer money between them.
+ * 
+ * Takes a little more work than you would think.
  * 
  * Overall, most basic functionality is finished, and you are able to create and manage a single bank account.
  * 
@@ -29,10 +30,8 @@ import javafx.stage.Stage;
 @SuppressWarnings("exports")
 public class bankAccountFX extends Application {
 	
-	public static StringProperty nameTest;
-	public static String name = "";
-	public static double balance = 0;
-	public static Text currentBalance;
+	public static String tempName = "";
+	public static double tempBalance;
 	public static Button b1;
 	public static Button b2;
 	public static Button b3;
@@ -41,11 +40,20 @@ public class bankAccountFX extends Application {
 	public static Scene base;
 	public static Stage stage;
 	public static GridPane gp;
+	public ArrayList<bankAccount> accounts;
 	
 	public void start(Stage s) throws Exception {
 		stage = new Stage();
 		
-		currentBalance = new Text("Your current balance is $0.00");
+		accounts = new ArrayList<bankAccount>(); //look at comment to see example syntax
+		
+		/*
+		 * List<Zombie> zombieList = new ArrayList<>();
+    		for(int x=0; x<10; x++){
+        		Zombie z = new Zombie(--whatever your paremeters are);
+        		zombieList.add(z); This list will have multiple of the 
+    		}
+		 */
 		
 		b1 = new Button("_Create new bank account");
 		b1.setOnAction(e -> { createAccount(); });
@@ -54,19 +62,17 @@ public class bankAccountFX extends Application {
 		renameButton.setOnAction(e -> { rename(); });
 		
 		b2 = new Button("_Withdraw");
-		b2.setOnAction(e -> { 
-			
-			if(name.length() == 0) {
+		b2.setOnAction(e -> {
+			if(tempName.length() == 0) {
 				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
 			} else {
 				withdraw(); 
 			}
-			
 		});
 		
 		b3 = new Button("_Deposit");
 		b3.setOnAction(e -> {
-			if(name.length() == 0) {
+			if(tempName.length() == 0) {
 				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
 			} else {
 				deposit(); 
@@ -75,7 +81,7 @@ public class bankAccountFX extends Application {
 		
 		b4 = new Button("Show Balance");
 		b4.setOnAction(e -> {
-			if(name.length() == 0) {
+			if(tempName.length() == 0) {
 				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
 			} else {
 				showBalance(); 
@@ -108,8 +114,8 @@ public class bankAccountFX extends Application {
 		
 		Optional<String> accName = create.showAndWait(); //waits until the user exits the dialog, and then queries the "ifPresent" method. if there's nothing there, it does nothing.
 		accName.ifPresent(e -> {
-			name = accName.get();
-			renameButton.setText("Rename account " + name);
+			tempName = accName.get();
+			renameButton.setText("Rename account " + tempName);
 			gp.getChildren().remove(b1);
 			gp.add(renameButton, 0, 0);
 			stage.setScene(base);
@@ -121,13 +127,13 @@ public class bankAccountFX extends Application {
 		
 		TextInputDialog rename = new TextInputDialog();
 		rename.setTitle("Rename Account");
-		rename.setHeaderText("Rename your account " + name);
+		rename.setHeaderText("Rename your account " + tempName);
 		rename.setContentText("Enter your new account name:");
 		
 		Optional<String> accName = rename.showAndWait();
 		accName.ifPresent(e -> {
-			name = accName.get();
-			renameButton.setText("Rename account " + name);
+			tempName = accName.get();
+			renameButton.setText("Rename account " + tempName);
 			gp.getChildren().remove(renameButton);
 			gp.add(renameButton, 0, 0);
 			stage.setScene(base);
@@ -149,19 +155,19 @@ public class bankAccountFX extends Application {
 				
 				if(temp < 0) {
 					errorWindow("Function Mismatch", "Please use the deposit function for this.");
-				} else if((balance-temp) < 0) {
+				} else if((tempBalance-temp) < 0) {
 					Alert overdraft = new Alert(AlertType.CONFIRMATION);
 					overdraft.setTitle("Overdraft Confirmation");
-					overdraft.setContentText("Are you sure you want to take out this amount?\nIt will apply an overdraft fee of $35 to your account " + name);
+					overdraft.setContentText("Are you sure you want to take out this amount?\nIt will apply an overdraft fee of $35 to your account " + tempName);
 					
 					Optional<ButtonType> affirm = overdraft.showAndWait();
 					if(affirm.get() == ButtonType.OK) {
-						balance -= temp + 35;
+						tempBalance -= temp + 35;
 					} else {
 						withdraw();
 					}
 				} else {
-					balance += temp;
+					tempBalance += temp;
 				}
 			} catch (Exception f) {
 				errorWindow("Not a number", "Please enter a valid number for your withdrawal.");
@@ -186,7 +192,7 @@ public class bankAccountFX extends Application {
 				if(temp < 0) {
 					errorWindow("Function Mismatch", "Please use the withdraw function for this.");
 				} else {
-					balance += temp;
+					tempBalance += temp;
 				}
 			} catch(Exception f) {
 				errorWindow("Unknown Error", "Please try again.");
@@ -202,10 +208,10 @@ public class bankAccountFX extends Application {
 		
 		balanceWindow.setTitle("Balance");
 		balanceWindow.setHeaderText(null);
-		if(balance == 0) {
+		if(tempBalance == 0) {
 			balanceWindow.setContentText("You have no balance. Use the deposit function to add more.");
 		} else {
-			balanceWindow.setContentText("You have a balance of $" + df.format(balance));
+			balanceWindow.setContentText("You have a balance of $" + df.format(tempBalance));
 		}
 		
 		balanceWindow.showAndWait();
