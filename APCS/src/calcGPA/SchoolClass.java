@@ -8,12 +8,34 @@ public class SchoolClass {
 	public double gradeCalc;
 	public double lengthCalc;
 	
-	public SchoolClass(String className, String classGrade, String classLength) {
+	public SchoolClass(String className) {
 		
 		name = className;
-		grade = classGrade;
-		length = classLength;
+		grade = "N/A";
+		length = "N/A";
 		
+	}
+	
+	public SchoolClass(String n, String g, String l) {
+		
+		name = n;
+		grade = g;
+		setGrade(grade);
+		length = l;
+		setLength(length);
+		
+	}
+	
+	public void setName(String newName) {
+		name = newName;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setGrade(String newGrade) {
+		grade = newGrade;
 		switch(grade) {
 		case "A+":
 			gradeCalc = 4.0;
@@ -43,21 +65,6 @@ public class SchoolClass {
 			gradeCalc = 0.0;
 			break;
 		}
-		
-		switch(length) {
-		case "Half Year":
-			lengthCalc = 2.0;
-		case "Full Year":
-			lengthCalc = 1.0;
-		}
-	}
-	
-	public void setName(String newName) {
-		name = newName;
-	}
-	
-	public String getName() {
-		return name;
 	}
 	
 	public String getGradeVerbose() { //returns the letter grade of the class
@@ -66,6 +73,16 @@ public class SchoolClass {
 	
 	public double getGradeCalc() {
 		return gradeCalc;
+	}
+	
+	public void setLength(String newLength) {
+		length = newLength;
+		switch(length) {
+		case "Half Year":
+			lengthCalc = 2.0;
+		case "Full Year":
+			lengthCalc = 1.0;
+		}
 	}
 	
 	public String getLengthVerbose() { //only used to tell people - no calculations

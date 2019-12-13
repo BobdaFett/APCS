@@ -63,30 +63,34 @@ public class GPACalc extends Application {
 				SchoolClass cl = new SchoolClass(classesBox.getSelectionModel().getSelectedItem().toString(), gradesBox.getSelectionModel().getSelectedItem().toString(), lengthBox.getSelectionModel().getSelectedItem().toString());
 				accounts.add(cl);
 				
-				//just for debugging
-				System.out.println("Class Name: " + accounts.get(0).getName());
+				//another debug idea - create multiple objects and then print all of their names with a foreach loop.
 				
 				classesBox.valueProperty().set("");
 				gradesBox.valueProperty().set("");
 				lengthBox.valueProperty().set("");
 				
 			} catch(Exception f) {
-				errorWindow("UNKNOWN ERROR", "That didn't work - try again."); //if there's an error do not allow the user to do anything until they acknowledge it
+				errorWindow("UNKNOWN ERROR", "That didn't work - try again.");
 			}
 		});
 		
 		calc.setOnAction(e -> { 
-			calculate(); 
+//			calculate();
+			
+			for(SchoolClass f : accounts) {
+				System.out.println(f.getName());
+			}
+			
 		});
 		
-		GridPane gp = new GridPane(); //create and add everything to a grid layout
+		GridPane gp = new GridPane();
 		gp.add(t, 0, 0);
 		gp.add(classesBox, 0, 1);
 		gp.add(gradesBox, 0, 2);
 		gp.add(lengthBox, 0, 3);
 		
-		gp.setPadding(new Insets(10)); //set spacing from sides
-		gp.setVgap(10); //set spacing between each grid area
+		gp.setPadding(new Insets(10));
+		gp.setVgap(10);
 		gp.setHgap(10);
 		
 		gp.add(addClass, 2, 1);
@@ -94,7 +98,6 @@ public class GPACalc extends Application {
 		
 		Scene sc = new Scene(gp);
 		
-		//set scene on stage and then show window
 		s.setScene(sc);
 		s.show();
 		

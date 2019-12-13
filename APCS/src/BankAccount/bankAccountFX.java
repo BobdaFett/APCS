@@ -5,14 +5,20 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 
 /**
@@ -30,40 +36,39 @@ import javafx.stage.Stage;
 @SuppressWarnings("exports")
 public class bankAccountFX extends Application {
 	
-	public static String tempName = "";
-	public static double tempBalance;
-	public static Button b1;
-	public static Button b2;
-	public static Button b3;
-	public static Button b4;
-	public static Button renameButton;
-	public static Scene base;
-	public static Stage stage;
-	public static GridPane gp;
-	public ArrayList<bankAccount> accounts;
+	static String tempName = "";
+	static double tempBalance;
+	static int editing;
+	static Button b1;
+	static Button b2;
+	static Button b3;
+	static Button b4;
+	static Button b5;
+	static Button renameButton;
+	static Scene base;
+	static Stage stage;
+	static GridPane gp;
+	static ArrayList<BankAccount> accounts;
 	
 	public void start(Stage s) throws Exception {
 		stage = new Stage();
 		
-		accounts = new ArrayList<bankAccount>(); //look at comment to see example syntax
-		
-		/*
-		 * List<Zombie> zombieList = new ArrayList<>();
-    		for(int x=0; x<10; x++){
-        		Zombie z = new Zombie(--whatever your paremeters are);
-        		zombieList.add(z); This list will have multiple of the 
-    		}
-		 */
+		accounts = new ArrayList<BankAccount>();
 		
 		b1 = new Button("_Create new bank account");
-		b1.setOnAction(e -> { createAccount(); });
+		b1.setOnAction(e -> {
+			createAccount();
+		});
 		
 		renameButton = new Button();
-		renameButton.setOnAction(e -> { rename(); });
+		renameButton.setOnAction(e -> {
+			rename();
+		});
 		
 		b2 = new Button("_Withdraw");
 		b2.setOnAction(e -> {
-			if(tempName.length() == 0) {
+			System.out.println(accounts.size());
+			if(accounts.size() == 0) {
 				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
 			} else {
 				withdraw(); 
@@ -72,7 +77,7 @@ public class bankAccountFX extends Application {
 		
 		b3 = new Button("_Deposit");
 		b3.setOnAction(e -> {
-			if(tempName.length() == 0) {
+			if(accounts.size() == 0) {
 				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
 			} else {
 				deposit(); 
@@ -81,11 +86,16 @@ public class bankAccountFX extends Application {
 		
 		b4 = new Button("Show Balance");
 		b4.setOnAction(e -> {
-			if(tempName.length() == 0) {
+			if(accounts.size() == 0) {
 				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
 			} else {
 				showBalance(); 
 			}
+		});
+		
+		b5 = new Button("Choose Account");
+		b5.setOnAction(e -> {
+			chooseAccount();
 		});
 		
 		gp = new GridPane();
@@ -93,6 +103,7 @@ public class bankAccountFX extends Application {
 		gp.add(b2, 1, 0);
 		gp.add(b3, 0, 1);
 		gp.add(b4, 1, 1);
+		gp.add(b5, 0, 2);
 		
 		gp.setPadding(new Insets(15));
 		gp.setVgap(10);
@@ -115,6 +126,8 @@ public class bankAccountFX extends Application {
 		Optional<String> accName = create.showAndWait(); //waits until the user exits the dialog, and then queries the "ifPresent" method. if there's nothing there, it does nothing.
 		accName.ifPresent(e -> {
 			tempName = accName.get();
+			BankAccount acc = new BankAccount(tempName);
+			accounts.add(acc);
 			renameButton.setText("Rename account " + tempName);
 			gp.getChildren().remove(b1);
 			gp.add(renameButton, 0, 0);
@@ -215,6 +228,36 @@ public class bankAccountFX extends Application {
 		}
 		
 		balanceWindow.showAndWait();
+	}
+	
+	public static void chooseAccount() {
+		ObservableList<String> options = FXCollections.observableArrayList();
+		for(BankAccount acc : accounts) { //just remember that the indexes are the same. for some reason i cant get the index of the option that was selected.
+			options.add(acc.getName());
+		}
+		
+		Button affirm = new Button("Choose");
+		
+		ComboBox choose = new ComboBox(options);
+		
+		affirm.setOnAction(e -> {
+			editing = choose.getSelectionModel().getSelectedIndex();
+		});
+		
+		GridPane accountGP = new GridPane();
+		accountGP.add(affirm, 0, 1);
+		accountGP.add(choose, 0, 0);
+		
+		accountGP.setPadding(new Insets(10));
+		accountGP.setVgap(10);
+		accountGP.setHgap(10);
+		
+		GridPane.setHalignment(affirm, HPos.CENTER);
+		GridPane.setHalignment(choose, HPos.CENTER);
+		
+		Scene accountSC = new Scene(accountGP);
+		stage.setScene(accountSC);
+		
 	}
 	
 	public static void errorWindow(String errorType, String message) { //error window method
