@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -25,7 +26,8 @@ public class ListViewCalc extends Application {
 	
 	public static ObservableList<SchoolClass> classes;
 	public static ObservableList<String> className;
-	public ListView<String> lv;
+	public int index;
+	public static ListView<String> lv;
 	
 	public void start(Stage s) throws Exception {
 		
@@ -33,6 +35,16 @@ public class ListViewCalc extends Application {
 		className = FXCollections.observableArrayList();
 		
 		lv = new ListView<String>(className); //want this to display the object name, through the getName() method... but don't see a way to make that happen.
+		
+		lv.setOnKeyPressed(key -> {
+			switch(key.getCode()) {
+			case DELETE: 
+				index = lv.getSelectionModel().getSelectedIndex();
+				delete(index); 
+				break;
+			default: break;
+			}
+		});
 		
 		MenuItem file1 = new MenuItem("Create Class");
 		file1.setOnAction(e -> {
@@ -45,11 +57,13 @@ public class ListViewCalc extends Application {
 		
 		MenuItem edit1 = new MenuItem("Edit Info...");
 		edit1.setOnAction(e -> {
-			edit(lv.getSelectionModel().getSelectedIndex());
+			index = lv.getSelectionModel().getSelectedIndex();
+			edit(classes.get(index));
 		});
 		MenuItem edit2 = new MenuItem("Delete Class");
 		edit2.setOnAction(e -> {
-			delete(lv.getSelectionModel().getSelectedIndex());
+			index = lv.getSelectionModel().getSelectedIndex();
+			delete(index);
 		});
 		
 		Menu m1 = new Menu("File");
@@ -85,15 +99,25 @@ public class ListViewCalc extends Application {
 		
 	}
 	
-	public static void edit(int index) {
+	public static void edit(SchoolClass sc) {
 		
-		//create a window to change the information of selected SchoolClass
+		ChoiceDialog<String> edit = new ChoiceDialog<String>("A+", "A", "B+", "B", "C+", "C", "D", "F+", "F");
+		
+		edit.setTitle("Edit class " + sc.getName());
+		edit.setHeaderText(null);
+		edit.setContentText("Choose your grade:");
+		
+		Optional<String> choice = edit.showAndWait();
+		choice.ifPresent(e -> {
+			sc.setGrade(choice.get());
+		});
 		
 	}
 	
-	public static void delete(int index) {
+	public static void delete(int target) {
 		
-		//remove class
+		lv.getItems().remove(target);
+		classes.remove(target);
 		
 	}
 	

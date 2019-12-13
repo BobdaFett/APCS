@@ -6,22 +6,25 @@ public class ObjectTesting {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+	
+		int max = -666;
+		int min = -333;
 		
-		ArrayList<BankAccount> accounts = new ArrayList<BankAccount>();
+		int newMax = (max % 2 == 0) ? max -= 1 : max;
+		int newMin = (min % 2 == 0) ? min += 1 : min;
+		int length = (newMax - newMin) / 2;
 		
-		BankAccount acc1 = new BankAccount("My Bank Account");
-		BankAccount acc2 = new BankAccount("My Second Bank Account");
+		int[] store = new int[length + 1];
+		int count = 0;
+		for(int i = min; i <= max; i += 2) {
+			store[count] = i;
+			count++;
+		}
 		
-		accounts.add(acc1); //index 0
-		accounts.add(acc2); //index 1
+		for(int thing : store) {
+			System.out.print(thing + " ");
+		}
 		
-		accounts.get(0); //this essentially turns the list into the object at that index - in this case, this is now the BankAccount acc1
-		accounts.get(1); //this is BankAccount acc2
-		
-		accounts.get(0).getBalance(); //you can call methods with this as well
-		
-		System.out.println(accounts.get(0).getBalance());
-		System.out.println(accounts.get(0).getName());
 	}
 
 }

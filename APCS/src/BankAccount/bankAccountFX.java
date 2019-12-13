@@ -23,8 +23,8 @@ import javafx.stage.Stage;
 
 /**
  * 
- * Working on changing the entire program to be able to create and manage multiple bank accounts,
- * while also being able to take those accounts and transfer money between them.
+ * Working on changing the entire program to be able to create and manage multiple bank managedAccounts,
+ * while also being able to take those managedAccounts and transfer money between them.
  * 
  * Takes a little more work than you would think.
  * 
@@ -48,12 +48,12 @@ public class bankAccountFX extends Application {
 	static Scene base;
 	static Stage stage;
 	static GridPane gp;
-	static ArrayList<BankAccount> accounts;
+	static ArrayList<ManagedAccount> managedAccounts;
 	
 	public void start(Stage s) throws Exception {
 		stage = new Stage();
 		
-		accounts = new ArrayList<BankAccount>();
+		managedAccounts = new ArrayList<ManagedAccount>();
 		
 		b1 = new Button("_Create new bank account");
 		b1.setOnAction(e -> {
@@ -67,8 +67,8 @@ public class bankAccountFX extends Application {
 		
 		b2 = new Button("_Withdraw");
 		b2.setOnAction(e -> {
-			System.out.println(accounts.size());
-			if(accounts.size() == 0) {
+			System.out.println(managedAccounts.size());
+			if(managedAccounts.size() == 0) {
 				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
 			} else {
 				withdraw(); 
@@ -77,7 +77,7 @@ public class bankAccountFX extends Application {
 		
 		b3 = new Button("_Deposit");
 		b3.setOnAction(e -> {
-			if(accounts.size() == 0) {
+			if(managedAccounts.size() == 0) {
 				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
 			} else {
 				deposit(); 
@@ -86,7 +86,7 @@ public class bankAccountFX extends Application {
 		
 		b4 = new Button("Show Balance");
 		b4.setOnAction(e -> {
-			if(accounts.size() == 0) {
+			if(managedAccounts.size() == 0) {
 				errorWindow("NO BANK ACCOUNT", "Please return and click \"Create new Bank Account\" to continue.");
 			} else {
 				showBalance(); 
@@ -126,8 +126,8 @@ public class bankAccountFX extends Application {
 		Optional<String> accName = create.showAndWait(); //waits until the user exits the dialog, and then queries the "ifPresent" method. if there's nothing there, it does nothing.
 		accName.ifPresent(e -> {
 			tempName = accName.get();
-			BankAccount acc = new BankAccount(tempName);
-			accounts.add(acc);
+			ManagedAccount acc = new ManagedAccount(tempName);
+			managedAccounts.add(acc);
 			renameButton.setText("Rename account " + tempName);
 			gp.getChildren().remove(b1);
 			gp.add(renameButton, 0, 0);
@@ -232,7 +232,7 @@ public class bankAccountFX extends Application {
 	
 	public static void chooseAccount() {
 		ObservableList<String> options = FXCollections.observableArrayList();
-		for(BankAccount acc : accounts) { //just remember that the indexes are the same. for some reason i cant get the index of the option that was selected.
+		for(ManagedAccount acc : managedAccounts) { //just remember that the indexes are the same. for some reason i cant get the index of the option that was selected.
 			options.add(acc.getName());
 		}
 		
