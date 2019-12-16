@@ -58,7 +58,7 @@ public class ListViewCalc extends Application {
 		MenuItem edit1 = new MenuItem("Edit Info...");
 		edit1.setOnAction(e -> {
 			index = lv.getSelectionModel().getSelectedIndex();
-			edit(classes.get(index));
+			edit(index);
 		});
 		MenuItem edit2 = new MenuItem("Delete Class");
 		edit2.setOnAction(e -> {
@@ -99,11 +99,8 @@ public class ListViewCalc extends Application {
 		
 	}
 	
-	public static void edit(SchoolClass sc) {
+	public static void edit(int index) {
 		
-		ChoiceDialog<String> edit = new ChoiceDialog<String>("A+", "A", "B+", "B", "C+", "C", "D", "F+", "F");
-		
-<<<<<<< HEAD
 		//create a window to change the information of selected SchoolClass... you're gonna have to make your own custom dialog.
 		
 		Stage edit = new Stage(); //just because you need to create a new window
@@ -147,28 +144,13 @@ public class ListViewCalc extends Application {
 		
 		edit.setScene(editSC);
 		edit.show();
-=======
-		edit.setTitle("Edit class " + sc.getName());
-		edit.setHeaderText(null);
-		edit.setContentText("Choose your grade:");
-		
-		Optional<String> choice = edit.showAndWait();
-		choice.ifPresent(e -> {
-			sc.setGrade(choice.get());
-		});
->>>>>>> 504ad897f80c62fa9ea9d64e4c521d8542463c92
 		
 	}
 	
-	public static void delete(int target) {
+	public static void delete(int index) {
 		
-<<<<<<< HEAD
 		classes.remove(index);
 		className.remove(index); //this should remove from the list
-=======
-		lv.getItems().remove(target);
-		classes.remove(target);
->>>>>>> 504ad897f80c62fa9ea9d64e4c521d8542463c92
 		
 	}
 	
