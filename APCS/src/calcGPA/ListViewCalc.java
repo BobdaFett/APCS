@@ -32,7 +32,7 @@ public class ListViewCalc extends Application {
 		classes = FXCollections.observableArrayList();
 		className = FXCollections.observableArrayList();
 		
-		lv = new ListView<String>(className); //want this to display the object name, through the getName() method... but don't see a way to make that happen.
+		lv = new ListView<String>(className);
 		
 		MenuItem file1 = new MenuItem("Create Class");
 		file1.setOnAction(e -> {
@@ -57,7 +57,7 @@ public class ListViewCalc extends Application {
 		Menu m2 = new Menu("Edit");
 		m2.getItems().addAll(edit1, edit2);
 		
-		MenuBar mb = new MenuBar(m1, m2); //create menus beforehand - easy scope
+		MenuBar mb = new MenuBar(m1, m2);
 		
 		GridPane gp = new GridPane();
 		gp.add(mb, 0, 0);
@@ -87,13 +87,56 @@ public class ListViewCalc extends Application {
 	
 	public static void edit(int index) {
 		
-		//create a window to change the information of selected SchoolClass
+		//create a window to change the information of selected SchoolClass... you're gonna have to make your own custom dialog.
+		
+		Stage edit = new Stage(); //just because you need to create a new window
+		GridPane editGP = new GridPane();
+		Button affirm = new Button("Save");
+		
+		ObservableList<Object> gradeOptions = FXCollections.observableArrayList("A+", "A", "B+", "B", "C+", "C", "D", "F+", "F");
+		ObservableList<Object> lengthOptions = FXCollections.observableArrayList("Half Year", "Full Year");
+		
+		ComboBox<String> nameBox = new ComboBox<String>(); //this should be a text field... i'll fix that later
+		ComboBox<Object> gradeBox = new ComboBox<Object>(gradeOptions);
+		ComboBox<Object> lengthBox = new ComboBox<Object>(lengthOptions);
+		
+		affirm.setOnAction(e -> {
+			if(!(nameBox.getSelectionModel().isEmpty())) { //true if none, false if there are
+				classes.get(index).setName(nameBox.getSelectionModel().toString());
+			}
+			
+			if(!(gradeBox.getSelectionModel().isEmpty())) {
+				classes.get(index).setGrade(gradeBox.getSelectionModel().toString());
+			}
+			
+			if(!(lengthBox.getSelectionModel().isEmpty())) {
+				classes.get(index).setGrade(lengthBox.getSelectionModel().toString());
+			}
+			
+			edit.close();
+		});
+		
+		editGP.setPadding(new Insets(10));
+		editGP.setVgap(5);
+		editGP.setHgap(5);
+		
+		editGP.add(nameBox, 1, 0);
+		editGP.add(gradeBox, 1, 1);
+		editGP.add(lengthBox, 1, 2);
+		
+		editGP.add(affirm, 2, 1);
+		
+		Scene editSC = new Scene(editGP);
+		
+		edit.setScene(editSC);
+		edit.show();
 		
 	}
 	
 	public static void delete(int index) {
 		
-		//remove class
+		classes.remove(index);
+		className.remove(index); //this should remove from the list
 		
 	}
 	
