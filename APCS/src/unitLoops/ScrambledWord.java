@@ -12,27 +12,30 @@ public class ScrambledWord {
 		String temp = sc.nextLine();
 		sc.close();
 		
-		System.out.println("\nYour scrambled word is " + scrambleWord(temp));
+		scrambleWord(temp);
 		
 	}
 	
-	public static String scrambleWord(String word) {
+	public static void scrambleWord(String word) {
 		
-		String tempWord = word.toUpperCase();
-		String tempResult = "";
+		char[] tempWord = word.toUpperCase().toCharArray();
 		
-		for(int i = 0; i < word.length(); i++) {
-			char temp = word.charAt(i);
-			char temp1 = word.charAt(i+1);
-			
-			if(temp == 'A' && temp1 != temp) {
-				
-				tempResult += tempWord.substring(i, i+1) + tempWord.substring(i+1, i+2);
-				i+=2;
+		for(int i = 0; i < tempWord.length - 1; i++) {
+			if(tempWord[i] == 'A') {
+				if(tempWord[i+1] != 'A') {
+					char temp = 'A';
+					tempWord[i] = tempWord[i+1];
+					tempWord[i+1] = temp;
+					i++;
+				}
 			}
 		}
 		
-		return tempResult;
+		System.out.print("\nYour scrambled word is ");
+		for(char e : tempWord) {
+			System.out.print(e);
+		}
+		
 	}
 
 }

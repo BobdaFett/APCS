@@ -8,20 +8,20 @@ public class SchoolClass {
 	public double gradeCalc;
 	public double lengthCalc;
 	
-	public SchoolClass(String className) {
+	public SchoolClass(String name) {
 		
-		name = className;
-		grade = "N/A";
-		length = "N/A";
+		this.name = name;
+		this.grade = "N/A";
+		this.length = "N/A";
 		
 	}
 	
-	public SchoolClass(String n, String g, String l) {
+	public SchoolClass(String name, String grade, String length) {
 		
-		name = n;
-		grade = g;
+		this.name = name;
+		this.grade = grade;
 		setGrade(grade);
-		length = l;
+		this.length = length;
 		setLength(length);
 		
 	}
@@ -34,8 +34,8 @@ public class SchoolClass {
 		return name;
 	}
 	
-	public void setGrade(String newGrade) {
-		grade = newGrade;
+	public void setGrade(String grade) {
+		this.grade = grade;
 		switch(grade) {
 		case "A+":
 			gradeCalc = 4.0;
@@ -75,14 +75,22 @@ public class SchoolClass {
 		return gradeCalc;
 	}
 	
-	public void setLength(String newLength) {
-		length = newLength;
+	public String getGradeCalcToString() {
+		return gradeCalc + "";
+	}
+	
+	public void setLength(String length) {
+		this.length = length;
 		switch(length) {
 		case "Half Year":
 			lengthCalc = 2.0;
 		case "Full Year":
 			lengthCalc = 1.0;
 		}
+	}
+	
+	public String getLength() {
+		return length;
 	}
 	
 	public String getLengthVerbose() { //only used to tell people - no calculations
@@ -93,7 +101,7 @@ public class SchoolClass {
 		return lengthCalc;
 	}
 	
-	public double calcGPA() {
+	public double getGPA() {
 		double GPA = gradeCalc/lengthCalc;
 		return GPA;
 	}

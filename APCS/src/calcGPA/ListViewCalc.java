@@ -11,11 +11,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -25,14 +28,28 @@ public class ListViewCalc extends Application {
 	public static ObservableList<SchoolClass> classes;
 	public static ObservableList<String> className;
 	public int index;
-	public static ListView<String> lv;
 	
 	public void start(Stage s) throws Exception {
 		
 		classes = FXCollections.observableArrayList();
 		className = FXCollections.observableArrayList();
 		
-		lv = new ListView<String>(className);
+		TableView<SchoolClass> lv = new TableView<>(classes);
+		lv.prefWidthProperty().bind(s.widthProperty());
+		lv.prefHeightProperty().bind(s.heightProperty());
+		lv.setPlaceholder(new Label("Click File > Create to make a new Class"));
+		
+		TableColumn<SchoolClass, String> GColumn = new TableColumn<>("Grade");
+		GColumn.setCellValueFactory(new PropertyValueFactory<>("gradeCalcToString"));
+		
+		TableColumn<SchoolClass, String> NColumn = new TableColumn<>("Class");
+		NColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+		
+		TableColumn<SchoolClass, String> LColumn = new TableColumn<>("Length");
+		LColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
+		
+		lv.getColumns().addAll(NColumn, GColumn, LColumn);
+		lv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
 		lv.setOnKeyPressed(key -> {
 			switch(key.getCode()) {
@@ -76,6 +93,8 @@ public class ListViewCalc extends Application {
 		gp.add(lv, 0, 1);
 		
 		Scene sc = new Scene(gp);
+		
+		s.setMaximized(true);
 		
 		s.setScene(sc);
 		s.show();
