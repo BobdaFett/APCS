@@ -7,23 +7,26 @@ public class ObjectTesting {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 	
-		int max = -666;
-		int min = -333;
-		
-		int newMax = (max % 2 == 0) ? max -= 1 : max;
-		int newMin = (min % 2 == 0) ? min += 1 : min;
-		int length = (newMax - newMin) / 2;
-		
-		int[] store = new int[length + 1];
 		int count = 0;
-		for(int i = min; i <= max; i += 2) {
-			store[count] = i;
+		int[] array = {984,948,984,98,4,4,0,4,4,4,89,0,55595,5,5999,5};
+		int[] reverse = new int[array.length];
+		
+		for(int i : array) {
+			System.out.println(i);
+		}
+		
+		for (int i = array.length-1; i >= 0; i--) {
+			reverse[i] = array[count];
 			count++;
 		}
 		
-		for(int thing : store) {
-			System.out.print(thing + " ");
+		for(int i : reverse) {
+			System.out.println(i);
 		}
+		
+		array = reverse;
+		
+		
 		
 	}
 
