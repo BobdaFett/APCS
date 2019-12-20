@@ -57,7 +57,6 @@ public class ListViewCalc extends Application {
 				index = lv.getSelectionModel().getSelectedIndex();
 				delete(index); 
 				break;
-			default: break;
 			}
 		});
 		
