@@ -109,7 +109,7 @@ public class GPACalc extends Application {
 		int numClasses = 0;
 		
 		for(SchoolClass e : accounts) {
-			tempGPA += e.calcGPA();
+			tempGPA += e.getGPA();
 			numClasses++;
 		}
 		
