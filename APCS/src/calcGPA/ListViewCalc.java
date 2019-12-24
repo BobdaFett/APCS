@@ -17,6 +17,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert.AlertType;
@@ -27,27 +28,25 @@ import javafx.stage.Stage;
 public class ListViewCalc extends Application {
 	
 	public static ObservableList<SchoolClass> classes;
-	public static ObservableList<String> className;
 	public int index;
 	
 	public void start(Stage s) throws Exception {
 		
 		classes = FXCollections.observableArrayList();
-		className = FXCollections.observableArrayList();
 		
-		TableView<SchoolClass> lv = new TableView<>(classes);
+		TableView<SchoolClass> lv = new TableView<SchoolClass>(classes);
 		lv.prefWidthProperty().bind(s.widthProperty());
 		lv.prefHeightProperty().bind(s.heightProperty());
 		lv.setPlaceholder(new Label("Click File > Create to make a new Class"));
 		
-		TableColumn<SchoolClass, String> GColumn = new TableColumn<>("Grade");
-		GColumn.setCellValueFactory(new PropertyValueFactory<>("gradeCalcToString"));
-		
 		TableColumn<SchoolClass, String> NColumn = new TableColumn<>("Class");
 		NColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		
+		TableColumn<SchoolClass, String> GColumn = new TableColumn<>("Grade");
+		GColumn.setCellValueFactory(new PropertyValueFactory<>("gradeVerbose"));
+		
 		TableColumn<SchoolClass, String> LColumn = new TableColumn<>("Length");
-		LColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
+		LColumn.setCellValueFactory(new PropertyValueFactory<>("lengthVerbose"));
 		
 		lv.getColumns().addAll(NColumn, GColumn, LColumn);
 		lv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -56,7 +55,13 @@ public class ListViewCalc extends Application {
 			switch(key.getCode()) {
 			case DELETE: 
 				index = lv.getSelectionModel().getSelectedIndex();
-				delete(index); 
+				if(index < 0) {
+					warningWindow("Nothing Selected", "Please select a class to continue.");
+				} else {
+					delete(index);
+				}
+				break;
+			default:
 				break;
 			}
 		});
@@ -73,12 +78,20 @@ public class ListViewCalc extends Application {
 		MenuItem edit1 = new MenuItem("Edit Info...");
 		edit1.setOnAction(e -> {
 			index = lv.getSelectionModel().getSelectedIndex();
-			edit(index);
+			if(index < 0) {
+				warningWindow("Nothing Selected", "Please select a class to continue.");
+			} else {
+				edit(index);
+			}
 		});
 		MenuItem edit2 = new MenuItem("Delete Class");
 		edit2.setOnAction(e -> {
 			index = lv.getSelectionModel().getSelectedIndex();
-			delete(index);
+			if(index < 0) {
+				warningWindow("Nothing Selected", "Please select a class to continue.");
+			} else {
+				delete(index);
+			}
 		});
 		
 		Menu m1 = new Menu("File");
@@ -110,7 +123,6 @@ public class ListViewCalc extends Application {
 		Optional<String> name = create.showAndWait();
 		name.ifPresent(e -> {
 			SchoolClass cl = new SchoolClass(name.get());
-			className.add(cl.getName());
 			classes.add(cl);
 		});
 		
@@ -119,6 +131,8 @@ public class ListViewCalc extends Application {
 	public static void edit(int index) {
 		
 		//create a window to change the information of selected SchoolClass... you're gonna have to make your own custom dialog.
+		
+		System.out.println(index);
 		
 		Stage edit = new Stage(); //just because you need to create a new window
 		GridPane editGP = new GridPane();
@@ -131,9 +145,11 @@ public class ListViewCalc extends Application {
 		Text gradeChange = new Text("Select new grade: ");
 		Text lengthChange = new Text("Select new length: ");
 		
-		TextArea nameBox = new TextArea(); //this should be a text field... i'll fix that later
+		TextField nameBox = new TextField(); //this should be a text field... i'll fix that later
 		ComboBox<Object> gradeBox = new ComboBox<Object>(gradeOptions);
 		ComboBox<Object> lengthBox = new ComboBox<Object>(lengthOptions);
+		
+		nameBox.setPromptText("Enter a name...");
 		
 		affirm.setOnAction(e -> {
 			if(nameBox.getText() != "") {
@@ -141,11 +157,11 @@ public class ListViewCalc extends Application {
 			}
 			
 			if(!(gradeBox.getSelectionModel().isEmpty())) {
-				classes.get(index).setGrade(gradeBox.getSelectionModel().toString());
+				classes.get(index).setGrade(gradeBox.getSelectionModel().getSelectedItem().toString());
 			}
 			
 			if(!(lengthBox.getSelectionModel().isEmpty())) {
-				classes.get(index).setGrade(lengthBox.getSelectionModel().toString());
+				classes.get(index).setLength(lengthBox.getSelectionModel().getSelectedItem().toString());
 			}
 			
 			edit.close();
@@ -175,7 +191,6 @@ public class ListViewCalc extends Application {
 	public static void delete(int index) {
 		
 		classes.remove(index);
-		className.remove(index); //this should remove from the list
 		
 	}
 	
@@ -185,6 +200,14 @@ public class ListViewCalc extends Application {
 		error.setContentText(message);
 		
 		error.showAndWait();
+	}
+	
+	public static void warningWindow(String warningType, String warningMessage) {
+		Alert warning = new Alert(AlertType.INFORMATION);
+		warning.setHeaderText(warningType);
+		warning.setContentText(warningMessage);
+		
+		warning.showAndWait();
 	}
 	
 	public static void main(String[] args) {

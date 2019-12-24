@@ -76,10 +76,6 @@ public class SchoolClass {
 		return gradeCalc;
 	}
 
-	public String getGradeCalcToString() {
-		return gradeCalc + "";
-	}
-
 	public void setLength(String length) {
 		this.length = length;
 		switch (length) {
