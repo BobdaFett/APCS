@@ -1,6 +1,5 @@
 package calcGPA;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.application.*;
@@ -17,10 +16,12 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ListViewCalc extends Application {
@@ -126,13 +127,17 @@ public class ListViewCalc extends Application {
 		ObservableList<Object> gradeOptions = FXCollections.observableArrayList("A+", "A", "B+", "B", "C+", "C", "D", "F+", "F");
 		ObservableList<Object> lengthOptions = FXCollections.observableArrayList("Half Year", "Full Year");
 		
-		ComboBox<String> nameBox = new ComboBox<String>(); //this should be a text field... i'll fix that later
+		Text nameChange = new Text("Enter new name: ");
+		Text gradeChange = new Text("Select new grade: ");
+		Text lengthChange = new Text("Select new length: ");
+		
+		TextArea nameBox = new TextArea(); //this should be a text field... i'll fix that later
 		ComboBox<Object> gradeBox = new ComboBox<Object>(gradeOptions);
 		ComboBox<Object> lengthBox = new ComboBox<Object>(lengthOptions);
 		
 		affirm.setOnAction(e -> {
-			if(!(nameBox.getSelectionModel().isEmpty())) { //true if none, false if there are
-				classes.get(index).setName(nameBox.getSelectionModel().toString());
+			if(nameBox.getText() != "") {
+				classes.get(index).setName(nameBox.getText());
 			}
 			
 			if(!(gradeBox.getSelectionModel().isEmpty())) {
@@ -150,11 +155,15 @@ public class ListViewCalc extends Application {
 		editGP.setVgap(5);
 		editGP.setHgap(5);
 		
-		editGP.add(nameBox, 1, 0);
-		editGP.add(gradeBox, 1, 1);
-		editGP.add(lengthBox, 1, 2);
+		editGP.add(nameChange, 1, 0);
+		editGP.add(gradeChange, 1, 1);
+		editGP.add(lengthChange, 1, 2);
 		
-		editGP.add(affirm, 2, 1);
+		editGP.add(nameBox, 2, 0);
+		editGP.add(gradeBox, 2, 1);
+		editGP.add(lengthBox, 2, 2);
+		
+		editGP.add(affirm, 1, 3);
 		
 		Scene editSC = new Scene(editGP);
 		
