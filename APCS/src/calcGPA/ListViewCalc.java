@@ -26,36 +26,47 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ListViewCalc extends Application {
-	
+
 	public static ObservableList<SchoolClass> classes;
 	public int index;
+
+	public static TableView<SchoolClass> lv;
+
+	public static ObservableList<Object> gradeOptions;
+	public static ObservableList<Object> lengthOptions;
 	
+	/**
+	 * Create the window.
+	 */
 	public void start(Stage s) throws Exception {
-		
-		classes = FXCollections.observableArrayList();
-		
-		TableView<SchoolClass> lv = new TableView<SchoolClass>(classes);
+
+		classes = FXCollections.observableArrayList();\
+		gradeOptions = FXCollections.observableArrayList("A+", "A", "B+", "B", "C+", "C", "D",
+				"F+", "F");
+		lengthOptions = FXCollections.observableArrayList("Half Year", "Full Year");
+
+		lv = new TableView<SchoolClass>(classes);
 		lv.prefWidthProperty().bind(s.widthProperty());
 		lv.prefHeightProperty().bind(s.heightProperty());
 		lv.setPlaceholder(new Label("Click File > Create to make a new Class"));
-		
+
 		TableColumn<SchoolClass, String> NColumn = new TableColumn<>("Class");
 		NColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-		
+
 		TableColumn<SchoolClass, String> GColumn = new TableColumn<>("Grade");
 		GColumn.setCellValueFactory(new PropertyValueFactory<>("gradeVerbose"));
-		
+
 		TableColumn<SchoolClass, String> LColumn = new TableColumn<>("Length");
 		LColumn.setCellValueFactory(new PropertyValueFactory<>("lengthVerbose"));
-		
+
 		lv.getColumns().addAll(NColumn, GColumn, LColumn);
 		lv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		
+
 		lv.setOnKeyPressed(key -> {
-			switch(key.getCode()) {
-			case DELETE: 
+			switch (key.getCode()) {
+			case DELETE:
 				index = lv.getSelectionModel().getSelectedIndex();
-				if(index < 0) {
+				if (index < 0) {
 					warningWindow("Nothing Selected", "Please select a class to continue.");
 				} else {
 					delete(index);
@@ -65,7 +76,7 @@ public class ListViewCalc extends Application {
 				break;
 			}
 		});
-		
+
 		MenuItem file1 = new MenuItem("Create Class");
 		file1.setOnAction(e -> {
 			create();
@@ -74,11 +85,11 @@ public class ListViewCalc extends Application {
 		file2.setOnAction(e -> {
 			s.close();
 		});
-		
+
 		MenuItem edit1 = new MenuItem("Edit Info...");
 		edit1.setOnAction(e -> {
 			index = lv.getSelectionModel().getSelectedIndex();
-			if(index < 0) {
+			if (index < 0) {
 				warningWindow("Nothing Selected", "Please select a class to continue.");
 			} else {
 				edit(index);
@@ -87,131 +98,205 @@ public class ListViewCalc extends Application {
 		MenuItem edit2 = new MenuItem("Delete Class");
 		edit2.setOnAction(e -> {
 			index = lv.getSelectionModel().getSelectedIndex();
-			if(index < 0) {
+			if (index < 0) {
 				warningWindow("Nothing Selected", "Please select a class to continue.");
 			} else {
 				delete(index);
 			}
 		});
-		
+
 		Menu m1 = new Menu("File");
 		m1.getItems().addAll(file1, file2);
 		Menu m2 = new Menu("Edit");
 		m2.getItems().addAll(edit1, edit2);
-		
+
 		MenuBar mb = new MenuBar(m1, m2);
-		
+
 		GridPane gp = new GridPane();
 		gp.add(mb, 0, 0);
 		gp.add(lv, 0, 1);
-		
+
 		Scene sc = new Scene(gp);
-		
+
 		s.setMaximized(true);
-		
+
 		s.setScene(sc);
 		s.show();
 	}
-	
-	public static void create() {
-		
+
+	/**
+	 * Creates a window that allows the user to make a class and display it on the
+	 * TableView.
+	 */
+	public static void create1() {
+
 		TextInputDialog create = new TextInputDialog();
 		create.setTitle("Create Class");
 		create.setHeaderText(null);
 		create.setContentText("Enter the class name:");
-		
+
 		Optional<String> name = create.showAndWait();
 		name.ifPresent(e -> {
 			SchoolClass cl = new SchoolClass(name.get());
 			classes.add(cl);
 		});
+
+		update();
+
+	}
+
+	public static void create() {
+
+		Stage create = new Stage();
+		GridPane gCreate = new GridPane();
+		Button affirm = new Button("Create");
+
+		Text tName = new Text("Enter a name: ");
+		Text tGrade = new Text("Select a grade: ");
+		Text tLength = new Text("Select a length: ");
+
+		TextField iName = new TextField();
+		ComboBox<Object> iGrade = new ComboBox(gradeOptions);
+		ComboBox<Object> iLength = new ComboBox<Object>(lengthOptions);
+		
+		gCreate.setPadding(new Insets(10));
+		gCreate.setVgap(5);
+		gCreate.setHgap(5);
+		
+		gCreate.add(tName, 0, 0);
+		gCreate.add(tGrade, 0, 1);
+		gCreate.add(tLength, 0, 2);
+		
+		gCreate.add(iName, 1, 0);
+		gCreate.add(iGrade, 1, 1);
+		gCreate.add(iLength, 1, 2);
+		
+		affirm.setOnAction(e -> {
+			Optional<String> oName = Optional.of((iName.getText().contentEquals("")) ? null : iName.getText());
+		});
 		
 	}
-	
+
+	/**
+	 * Creates a window that allows the user to edit the selected TableView index.
+	 * 
+	 * @param index
+	 */
 	public static void edit(int index) {
-		
-		//create a window to change the information of selected SchoolClass... you're gonna have to make your own custom dialog.
-		
-		System.out.println(index);
-		
-		Stage edit = new Stage(); //just because you need to create a new window
+
+		Stage edit = new Stage();
 		GridPane editGP = new GridPane();
 		Button affirm = new Button("Save");
+
 		
-		ObservableList<Object> gradeOptions = FXCollections.observableArrayList("A+", "A", "B+", "B", "C+", "C", "D", "F+", "F");
-		ObservableList<Object> lengthOptions = FXCollections.observableArrayList("Half Year", "Full Year");
-		
+
 		Text nameChange = new Text("Enter new name: ");
 		Text gradeChange = new Text("Select new grade: ");
 		Text lengthChange = new Text("Select new length: ");
-		
-		TextField nameBox = new TextField(); //this should be a text field... i'll fix that later
+
+		TextField nameBox = new TextField();
 		ComboBox<Object> gradeBox = new ComboBox<Object>(gradeOptions);
 		ComboBox<Object> lengthBox = new ComboBox<Object>(lengthOptions);
-		
+
 		nameBox.setPromptText("Enter a name...");
-		
+
 		affirm.setOnAction(e -> {
-			if(nameBox.getText() != "") {
+			if (nameBox.getText() != "") {
 				classes.get(index).setName(nameBox.getText());
 			}
-			
-			if(!(gradeBox.getSelectionModel().isEmpty())) {
+
+			if (!(gradeBox.getSelectionModel().isEmpty())) {
 				classes.get(index).setGrade(gradeBox.getSelectionModel().getSelectedItem().toString());
 			}
-			
-			if(!(lengthBox.getSelectionModel().isEmpty())) {
+
+			if (!(lengthBox.getSelectionModel().isEmpty())) {
 				classes.get(index).setLength(lengthBox.getSelectionModel().getSelectedItem().toString());
 			}
-			
+
 			edit.close();
+
+			update();
 		});
-		
+
 		editGP.setPadding(new Insets(10));
 		editGP.setVgap(5);
 		editGP.setHgap(5);
-		
+
 		editGP.add(nameChange, 1, 0);
 		editGP.add(gradeChange, 1, 1);
 		editGP.add(lengthChange, 1, 2);
-		
+
 		editGP.add(nameBox, 2, 0);
 		editGP.add(gradeBox, 2, 1);
 		editGP.add(lengthBox, 2, 2);
-		
+
 		editGP.add(affirm, 1, 3);
-		
+
 		Scene editSC = new Scene(editGP);
-		
+
 		edit.setScene(editSC);
 		edit.show();
-		
+
 	}
-	
+
+	/**
+	 * WIP - Updates the TableView anytime a class value is changed.
+	 * 
+	 * @param index
+	 */
+	public static void update() {
+		lv.refresh();
+	}
+
+	/**
+	 * Allows user to delete the selected index.
+	 * 
+	 * @param index
+	 */
 	public static void delete(int index) {
-		
+
 		classes.remove(index);
-		
+		update();
+
 	}
-	
-	public static void errorWindow(String errorType, String message) { //error window method
+
+	/**
+	 * Only called when the user enters something wrong. Creates an error window
+	 * with the type of error and related information.
+	 * 
+	 * @param errorType
+	 * @param message
+	 */
+	public static void errorWindow(String errorType, String message) { // error window method
 		Alert error = new Alert(AlertType.ERROR);
 		error.setHeaderText(errorType);
 		error.setContentText(message);
-		
+
 		error.showAndWait();
 	}
-	
+
+	/**
+	 * Only called when the user is making a risky decision. Creates a warning
+	 * window with all relevant information.
+	 * 
+	 * @param warningType
+	 * @param warningMessage
+	 */
 	public static void warningWindow(String warningType, String warningMessage) {
 		Alert warning = new Alert(AlertType.INFORMATION);
 		warning.setHeaderText(warningType);
 		warning.setContentText(warningMessage);
-		
+
 		warning.showAndWait();
 	}
-	
+
+	/**
+	 * Launches the application.
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Application.launch();
 	}
-	
+
 }

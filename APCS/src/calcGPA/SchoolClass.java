@@ -8,15 +8,27 @@ public class SchoolClass {
 	public double gradeCalc;
 	public double lengthCalc;
 
+	/**
+	 * Creates class with only a name. Will require use of other methods later.
+	 * 
+	 * @param name
+	 */
 	public SchoolClass(String name) {
 
 		this.name = name;
 		this.grade = "N/A";
-		
+
 		this.length = "N/A";
 
 	}
 
+	/**
+	 * Creates class with name, grade, and length.
+	 * 
+	 * @param name
+	 * @param grade
+	 * @param length
+	 */
 	public SchoolClass(String name, String grade, String length) {
 
 		this.name = name;
@@ -27,14 +39,29 @@ public class SchoolClass {
 
 	}
 
+	/**
+	 * Sets name of the class.
+	 * 
+	 * @param newName
+	 */
 	public void setName(String newName) {
 		name = newName;
 	}
 
+	/**
+	 * Returns the name of the class.
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets both letter grade and number of credits, respectively.
+	 * 
+	 * @param grade
+	 */
 	public void setGrade(String grade) {
 		this.grade = grade;
 		switch (grade) {
@@ -68,14 +95,29 @@ public class SchoolClass {
 		}
 	}
 
-	public String getGradeVerbose() { // returns the letter grade of the class
+	/**
+	 * Returns the letter grade. Not useful in calculations.
+	 * 
+	 * @return
+	 */
+	public String getGradeVerbose() {
 		return grade;
 	}
 
+	/**
+	 * Returns grade as a number of credits. Intended for calculations.
+	 * 
+	 * @return
+	 */
 	public double getGradeCalc() {
 		return gradeCalc;
 	}
 
+	/**
+	 * Sets length and lengthCalc as a string value and a number.
+	 * 
+	 * @param length
+	 */
 	public void setLength(String length) {
 		this.length = length;
 		switch (length) {
@@ -86,21 +128,50 @@ public class SchoolClass {
 		}
 	}
 
+	/**
+	 * Returns the length as a string value. Not useful for calculations. Seems to
+	 * be a duplicate method.
+	 * 
+	 * @return
+	 */
 	public String getLength() {
 		return length;
 	}
 
-	public String getLengthVerbose() { // only used to tell people - no calculations
+	/**
+	 * Returns length as a string value. Not useful for calculations.
+	 * 
+	 * @return
+	 */
+	public String getLengthVerbose() {
 		return length;
 	}
 
-	public double getLengthCalc() { // only used for calculations
+	/**
+	 * Returns length as a number for calculations.
+	 * 
+	 * @return
+	 */
+	public double getLengthCalc() {
 		return lengthCalc;
 	}
 
+	/**
+	 * Calculates the GPA and returns the value as a double.
+	 * 
+	 * @return
+	 */
 	public double getGPA() {
 		double GPA = gradeCalc / lengthCalc;
 		return GPA;
+	}
+
+	/**
+	 * WIP - Updates the TableView with any new information.
+	 * 
+	 * @param index
+	 */
+	public static void update(int index) {
 	}
 
 }
