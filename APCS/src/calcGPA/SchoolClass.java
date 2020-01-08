@@ -23,23 +23,6 @@ public class SchoolClass {
 	}
 
 	/**
-	 * Creates class with name, grade, and length.
-	 * 
-	 * @param name
-	 * @param grade
-	 * @param length
-	 */
-	public SchoolClass(String name, String grade, String length) {
-
-		this.name = name;
-		this.grade = grade;
-		setGrade(grade);
-		this.length = length;
-		setLength(length);
-
-	}
-
-	/**
 	 * Sets name of the class.
 	 * 
 	 * @param newName

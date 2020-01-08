@@ -16,10 +16,11 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -34,15 +35,15 @@ public class ListViewCalc extends Application {
 
 	public static ObservableList<Object> gradeOptions;
 	public static ObservableList<Object> lengthOptions;
-	
+
 	/**
 	 * Create the window.
 	 */
+	@SuppressWarnings("unchecked")
 	public void start(Stage s) throws Exception {
 
-		classes = FXCollections.observableArrayList();\
-		gradeOptions = FXCollections.observableArrayList("A+", "A", "B+", "B", "C+", "C", "D",
-				"F+", "F");
+		classes = FXCollections.observableArrayList();
+		gradeOptions = FXCollections.observableArrayList("A+", "A", "B+", "B", "C+", "C", "D", "F+", "F");
 		lengthOptions = FXCollections.observableArrayList("Half Year", "Full Year");
 
 		lv = new TableView<SchoolClass>(classes);
@@ -65,7 +66,6 @@ public class ListViewCalc extends Application {
 		lv.setOnKeyPressed(key -> {
 			switch (key.getCode()) {
 			case DELETE:
-				index = lv.getSelectionModel().getSelectedIndex();
 				if (index < 0) {
 					warningWindow("Nothing Selected", "Please select a class to continue.");
 				} else {
@@ -74,6 +74,15 @@ public class ListViewCalc extends Application {
 				break;
 			default:
 				break;
+			}
+		});
+
+		lv.setOnMouseClicked(e -> {
+			if (e.getButton() == MouseButton.PRIMARY) {
+				index = lv.getSelectionModel().getSelectedIndex();
+			}
+			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
+				edit(index);
 			}
 		});
 
@@ -88,7 +97,6 @@ public class ListViewCalc extends Application {
 
 		MenuItem edit1 = new MenuItem("Edit Info...");
 		edit1.setOnAction(e -> {
-			index = lv.getSelectionModel().getSelectedIndex();
 			if (index < 0) {
 				warningWindow("Nothing Selected", "Please select a class to continue.");
 			} else {
@@ -97,7 +105,6 @@ public class ListViewCalc extends Application {
 		});
 		MenuItem edit2 = new MenuItem("Delete Class");
 		edit2.setOnAction(e -> {
-			index = lv.getSelectionModel().getSelectedIndex();
 			if (index < 0) {
 				warningWindow("Nothing Selected", "Please select a class to continue.");
 			} else {
@@ -145,6 +152,10 @@ public class ListViewCalc extends Application {
 
 	}
 
+	/**
+	 * Creates a window allowing the user to create a class with optional
+	 * components.
+	 */
 	public static void create() {
 
 		Stage create = new Stage();
@@ -156,25 +167,45 @@ public class ListViewCalc extends Application {
 		Text tLength = new Text("Select a length: ");
 
 		TextField iName = new TextField();
-		ComboBox<Object> iGrade = new ComboBox(gradeOptions);
+		ComboBox<Object> iGrade = new ComboBox<Object>(gradeOptions);
 		ComboBox<Object> iLength = new ComboBox<Object>(lengthOptions);
-		
+
 		gCreate.setPadding(new Insets(10));
 		gCreate.setVgap(5);
 		gCreate.setHgap(5);
-		
+
 		gCreate.add(tName, 0, 0);
 		gCreate.add(tGrade, 0, 1);
 		gCreate.add(tLength, 0, 2);
-		
+
 		gCreate.add(iName, 1, 0);
 		gCreate.add(iGrade, 1, 1);
 		gCreate.add(iLength, 1, 2);
-		
+		gCreate.add(affirm, 2, 2);
+
 		affirm.setOnAction(e -> {
-			Optional<String> oName = Optional.of((iName.getText().contentEquals("")) ? null : iName.getText());
+
+			if (iName.getText().toString() == "") {
+				errorWindow("NO NAME", "You can't create a class without a name.");
+				create();
+			} else {
+				SchoolClass c = new SchoolClass(iName.getText()); // need to change this - it's creating classes without names.
+				if (!iGrade.getSelectionModel().isEmpty()) {
+					c.setGrade(iGrade.getSelectionModel().getSelectedItem().toString());
+				}
+
+				if (!(iLength.getSelectionModel().isEmpty())) {
+					c.setLength(iLength.getSelectionModel().getSelectedItem().toString());
+				}
+				classes.add(c);
+			}
+			create.close();
 		});
-		
+
+		Scene sCreate = new Scene(gCreate);
+		create.setScene(sCreate);
+		create.show();
+
 	}
 
 	/**
@@ -188,8 +219,6 @@ public class ListViewCalc extends Application {
 		GridPane editGP = new GridPane();
 		Button affirm = new Button("Save");
 
-		
-
 		Text nameChange = new Text("Enter new name: ");
 		Text gradeChange = new Text("Select new grade: ");
 		Text lengthChange = new Text("Select new length: ");
@@ -201,7 +230,7 @@ public class ListViewCalc extends Application {
 		nameBox.setPromptText("Enter a name...");
 
 		affirm.setOnAction(e -> {
-			if (nameBox.getText() != "") {
+			if (!nameBox.getText().isEmpty()) {
 				classes.get(index).setName(nameBox.getText());
 			}
 
