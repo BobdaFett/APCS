@@ -185,11 +185,12 @@ public class ListViewCalc extends Application {
 
 		affirm.setOnAction(e -> {
 
-			if (iName.getText().toString() == "") {
+			if (iName.getText().isEmpty()) {
 				errorWindow("NO NAME", "You can't create a class without a name.");
 				create();
 			} else {
-				SchoolClass c = new SchoolClass(iName.getText()); // need to change this - it's creating classes without names.
+				SchoolClass c = new SchoolClass(iName.getText());
+				
 				if (!iGrade.getSelectionModel().isEmpty()) {
 					c.setGrade(iGrade.getSelectionModel().getSelectedItem().toString());
 				}
@@ -199,6 +200,7 @@ public class ListViewCalc extends Application {
 				}
 				classes.add(c);
 			}
+
 			create.close();
 		});
 
