@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -59,7 +60,7 @@ public class ListViewCalc extends Application {
 
 		TableColumn<SchoolClass, String> LColumn = new TableColumn<>("Length");
 		LColumn.setCellValueFactory(new PropertyValueFactory<>("lengthVerbose"));
-
+		
 		lv.getColumns().addAll(NColumn, GColumn, LColumn);
 		lv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -77,19 +78,13 @@ public class ListViewCalc extends Application {
 			}
 		});
 
-		lv.setOnMouseClicked(e -> {
-			if (e.getButton() == MouseButton.PRIMARY) {
-				index = lv.getSelectionModel().getSelectedIndex();
-			}
-			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
-				edit(index);
-			}
-		});
+		
 
 		MenuItem file1 = new MenuItem("Create Class");
 		file1.setOnAction(e -> {
 			create();
 		});
+		
 		MenuItem file2 = new MenuItem("Exit");
 		file2.setOnAction(e -> {
 			s.close();
@@ -103,6 +98,7 @@ public class ListViewCalc extends Application {
 				edit(index);
 			}
 		});
+		
 		MenuItem edit2 = new MenuItem("Delete Class");
 		edit2.setOnAction(e -> {
 			if (index < 0) {
@@ -112,6 +108,31 @@ public class ListViewCalc extends Application {
 			}
 		});
 
+		MenuItem calc = new MenuItem("Calculate GPA");
+		calc.setOnAction(e -> {
+			if (index < 0) {
+				warningWindow("Nothing Selected", "Please select a class to continue.");
+			} else {
+				classes.get(index).getGPA();
+			}
+		});
+		
+		ContextMenu rClick = new ContextMenu(edit1, calc, edit2);
+		lv.setContextMenu(rClick);
+		
+		lv.setOnMouseClicked(e -> {
+			if (e.getButton() == MouseButton.PRIMARY) {
+				index = lv.getSelectionModel().getSelectedIndex();
+			}
+			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
+				edit(index);
+			}
+			if (e.getButton() == MouseButton.SECONDARY) {
+				index = lv.getSelectionModel().getSelectedIndex();
+				rClick.show(lv, e.getScreenX(), e.getScreenY());
+			}
+		});
+		
 		Menu m1 = new Menu("File");
 		m1.getItems().addAll(file1, file2);
 		Menu m2 = new Menu("Edit");
