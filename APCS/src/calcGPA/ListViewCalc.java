@@ -20,7 +20,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -153,7 +152,7 @@ public class ListViewCalc extends Application {
 	}
 
 	/**
-	 * Creates a window allowing the user to create a class with optional
+	 * WIP - Creates a window allowing the user to create a class with optional
 	 * components.
 	 */
 	public static void create() {
@@ -188,17 +187,15 @@ public class ListViewCalc extends Application {
 			if (iName.getText().toString() == "") {
 				errorWindow("NO NAME", "You can't create a class without a name.");
 				create();
-			} else {
-				SchoolClass c = new SchoolClass(iName.getText()); // need to change this - it's creating classes without names.
-				if (!iGrade.getSelectionModel().isEmpty()) {
-					c.setGrade(iGrade.getSelectionModel().getSelectedItem().toString());
-				}
-
-				if (!(iLength.getSelectionModel().isEmpty())) {
-					c.setLength(iLength.getSelectionModel().getSelectedItem().toString());
-				}
-				classes.add(c);
 			}
+			SchoolClass c = new SchoolClass(iName.getText()); // need to change this - it's creating classes without names.
+			if (!iGrade.getSelectionModel().isEmpty()) {
+				c.setGrade(iGrade.getSelectionModel().getSelectedItem().toString());
+			}
+			if (!(iLength.getSelectionModel().isEmpty())) {
+				c.setLength(iLength.getSelectionModel().getSelectedItem().toString());
+			}
+			classes.add(c);
 			create.close();
 		});
 
@@ -269,7 +266,7 @@ public class ListViewCalc extends Application {
 	}
 
 	/**
-	 * WIP - Updates the TableView anytime a class value is changed.
+	 * Updates the TableView anytime a class value is changed.
 	 * 
 	 * @param index
 	 */
