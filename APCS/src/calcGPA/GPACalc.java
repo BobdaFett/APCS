@@ -60,8 +60,8 @@ public class GPACalc extends Application {
 			try {
 				
 				//creates SchoolClass object and adds it to an ArrayList - should allow you to add multiple of the same name object.
-				SchoolClass cl = new SchoolClass(classesBox.getSelectionModel().getSelectedItem().toString(), gradesBox.getSelectionModel().getSelectedItem().toString(), lengthBox.getSelectionModel().getSelectedItem().toString());
-				accounts.add(cl);
+				//SchoolClass cl = new SchoolClass(classesBox.getSelectionModel().getSelectedItem().toString(), gradesBox.getSelectionModel().getSelectedItem().toString(), lengthBox.getSelectionModel().getSelectedItem().toString());
+				//accounts.add(cl);
 				
 				//another debug idea - create multiple objects and then print all of their names with a foreach loop.
 				
