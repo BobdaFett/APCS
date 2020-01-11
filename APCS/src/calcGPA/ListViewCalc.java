@@ -6,9 +6,12 @@ import javafx.application.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -77,7 +80,7 @@ public class ListViewCalc extends Application {
 			}
 		});
 
-		
+		// there should be something here
 
 		MenuItem file1 = new MenuItem("Create Class");
 		file1.setOnAction(e -> {
@@ -181,6 +184,7 @@ public class ListViewCalc extends Application {
 		Stage create = new Stage();
 		GridPane gCreate = new GridPane();
 		Button affirm = new Button("Create");
+		affirm.setDefaultButton(true);
 
 		Text tName = new Text("Enter a name: ");
 		Text tGrade = new Text("Select a grade: ");
@@ -207,33 +211,20 @@ public class ListViewCalc extends Application {
 
 			if (iName.getText().isEmpty()) {
 				errorWindow("NO NAME", "You can't create a class without a name.");
+				create.close();
 				create();
-<<<<<<< HEAD
-			}
-			SchoolClass c = new SchoolClass(iName.getText()); // need to change this - it's creating classes without names.
-			if (!iGrade.getSelectionModel().isEmpty()) {
-				c.setGrade(iGrade.getSelectionModel().getSelectedItem().toString());
-			}
-			if (!(iLength.getSelectionModel().isEmpty())) {
-				c.setLength(iLength.getSelectionModel().getSelectedItem().toString());
-			}
-			classes.add(c);
-=======
 			} else {
-				SchoolClass c = new SchoolClass(iName.getText());
-				
+				SchoolClass c = new SchoolClass(iName.getText()); // need to change this - it's creating classes without names.
 				if (!iGrade.getSelectionModel().isEmpty()) {
 					c.setGrade(iGrade.getSelectionModel().getSelectedItem().toString());
 				}
-
 				if (!(iLength.getSelectionModel().isEmpty())) {
 					c.setLength(iLength.getSelectionModel().getSelectedItem().toString());
 				}
 				classes.add(c);
+				create.close();
 			}
-
->>>>>>> d914c04ecb9797504aa59a1d189bacf6d4272f44
-			create.close();
+			
 		});
 
 		Scene sCreate = new Scene(gCreate);
@@ -249,21 +240,25 @@ public class ListViewCalc extends Application {
 	 */
 	public static void edit(int index) {
 
+		// TODO Create a way to make individual assignments in each class - after that make it so that each score can be weighted differently.
+		
 		Stage edit = new Stage();
 		GridPane editGP = new GridPane();
 		Button affirm = new Button("Save");
+		affirm.setDefaultButton(true);
 
 		Text nameChange = new Text("Enter new name: ");
 		Text gradeChange = new Text("Select new grade: ");
 		Text lengthChange = new Text("Select new length: ");
 
 		TextField nameBox = new TextField();
+		nameBox.setText(classes.get(index).getName());
 		ComboBox<Object> gradeBox = new ComboBox<Object>(gradeOptions);
 		ComboBox<Object> lengthBox = new ComboBox<Object>(lengthOptions);
 
 		nameBox.setPromptText("Enter a name...");
 
-		affirm.setOnAction(e -> {
+		affirm.setOnAction(e -> { // this works for this method because it's a completely optional one.
 			if (!nameBox.getText().isEmpty()) {
 				classes.get(index).setName(nameBox.getText());
 			}
@@ -284,7 +279,7 @@ public class ListViewCalc extends Application {
 		editGP.setPadding(new Insets(10));
 		editGP.setVgap(5);
 		editGP.setHgap(5);
-
+		
 		editGP.add(nameChange, 1, 0);
 		editGP.add(gradeChange, 1, 1);
 		editGP.add(lengthChange, 1, 2);
@@ -293,7 +288,8 @@ public class ListViewCalc extends Application {
 		editGP.add(gradeBox, 2, 1);
 		editGP.add(lengthBox, 2, 2);
 
-		editGP.add(affirm, 1, 3);
+		editGP.add(affirm, 1, 3, 2, 1);
+		GridPane.setValignment(affirm, VPos.CENTER);
 
 		Scene editSC = new Scene(editGP);
 
@@ -304,8 +300,6 @@ public class ListViewCalc extends Application {
 
 	/**
 	 * Updates the TableView anytime a class value is changed.
-	 * 
-	 * @param index
 	 */
 	public static void update() {
 		lv.refresh();
@@ -317,9 +311,16 @@ public class ListViewCalc extends Application {
 	 * @param index
 	 */
 	public static void delete(int index) {
-
-		classes.remove(index);
-		update();
+		
+		Alert warning = new Alert(AlertType.CONFIRMATION);
+		warning.setHeaderText("Delete a class");
+		warning.setContentText("Are you sure you want to do this?");
+		
+		Optional<ButtonType> affirm = warning.showAndWait();
+		if(affirm.get() == ButtonType.OK) {
+			classes.remove(index);
+			update();
+		}
 
 	}
 
@@ -346,10 +347,10 @@ public class ListViewCalc extends Application {
 	 * @param warningMessage
 	 */
 	public static void warningWindow(String warningType, String warningMessage) {
-		Alert warning = new Alert(AlertType.INFORMATION);
+		final Alert warning = new Alert(AlertType.WARNING);
 		warning.setHeaderText(warningType);
 		warning.setContentText(warningMessage);
-
+		
 		warning.showAndWait();
 	}
 
