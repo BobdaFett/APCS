@@ -5,10 +5,11 @@ import java.util.Optional;
 import javafx.application.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -29,7 +30,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class ListViewCalc extends Application {
+/**
+ * A program to create and manage classes, along with getting the total GPA of
+ * all of them.
+ * 
+ * @author lvas
+ *
+ */
+
+public class GPACalc extends Application {
 
 	public static ObservableList<SchoolClass> classes;
 	public int index;
@@ -62,8 +71,11 @@ public class ListViewCalc extends Application {
 
 		TableColumn<SchoolClass, String> LColumn = new TableColumn<>("Length");
 		LColumn.setCellValueFactory(new PropertyValueFactory<>("lengthVerbose"));
-		
-		lv.getColumns().addAll(NColumn, GColumn, LColumn);
+
+		TableColumn<SchoolClass, String> GPAColumn = new TableColumn<>("GPA");
+		GPAColumn.setCellValueFactory(new PropertyValueFactory<>("gradeAverage"));
+
+		lv.getColumns().addAll(NColumn, GColumn, LColumn, GPAColumn);
 		lv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		lv.setOnKeyPressed(key -> {
@@ -86,7 +98,7 @@ public class ListViewCalc extends Application {
 		file1.setOnAction(e -> {
 			create();
 		});
-		
+
 		MenuItem file2 = new MenuItem("Exit");
 		file2.setOnAction(e -> {
 			s.close();
@@ -97,10 +109,10 @@ public class ListViewCalc extends Application {
 			if (index < 0) {
 				warningWindow("Nothing Selected", "Please select a class to continue.");
 			} else {
-				edit(index);
+				edit(lv.getSelectionModel().getSelectedItem());
 			}
 		});
-		
+
 		MenuItem edit2 = new MenuItem("Delete Class");
 		edit2.setOnAction(e -> {
 			if (index < 0) {
@@ -115,26 +127,26 @@ public class ListViewCalc extends Application {
 			if (index < 0) {
 				warningWindow("Nothing Selected", "Please select a class to continue.");
 			} else {
-				classes.get(index).getGPA();
+				classes.get(index).getGradeAverage();
 			}
 		});
-		
+
 		ContextMenu rClick = new ContextMenu(edit1, calc, edit2);
 		lv.setContextMenu(rClick);
-		
+
 		lv.setOnMouseClicked(e -> {
 			if (e.getButton() == MouseButton.PRIMARY) {
 				index = lv.getSelectionModel().getSelectedIndex();
 			}
 			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
-				edit(index);
+				edit(lv.getSelectionModel().getSelectedItem());
 			}
 			if (e.getButton() == MouseButton.SECONDARY) {
 				index = lv.getSelectionModel().getSelectedIndex();
 				rClick.show(lv, e.getScreenX(), e.getScreenY());
 			}
 		});
-		
+
 		Menu m1 = new Menu("File");
 		m1.getItems().addAll(file1, file2);
 		Menu m2 = new Menu("Edit");
@@ -155,28 +167,7 @@ public class ListViewCalc extends Application {
 	}
 
 	/**
-	 * Creates a window that allows the user to make a class and display it on the
-	 * TableView.
-	 */
-	public static void create1() {
-
-		TextInputDialog create = new TextInputDialog();
-		create.setTitle("Create Class");
-		create.setHeaderText(null);
-		create.setContentText("Enter the class name:");
-
-		Optional<String> name = create.showAndWait();
-		name.ifPresent(e -> {
-			SchoolClass cl = new SchoolClass(name.get());
-			classes.add(cl);
-		});
-
-		update();
-
-	}
-
-	/**
-	 * WIP - Creates a window allowing the user to create a class with optional
+	 * Creates a window allowing the user to create a class with optional
 	 * components.
 	 */
 	public static void create() {
@@ -224,7 +215,7 @@ public class ListViewCalc extends Application {
 				classes.add(c);
 				create.close();
 			}
-			
+
 		});
 
 		Scene sCreate = new Scene(gCreate);
@@ -233,15 +224,22 @@ public class ListViewCalc extends Application {
 
 	}
 
+	private static SchoolClass cla;
+
 	/**
 	 * Creates a window that allows the user to edit the selected TableView index.
 	 * 
+	 * WIP - create separate assignments that will also affect your grade.
+	 * 
 	 * @param index
 	 */
-	public static void edit(int index) {
+	public static void edit(SchoolClass clas) {
 
 		// TODO Create a way to make individual assignments in each class - after that make it so that each score can be weighted differently.
-		
+
+		if (cla == null)
+			cla = new SchoolClass();
+
 		Stage edit = new Stage();
 		GridPane editGP = new GridPane();
 		Button affirm = new Button("Save");
@@ -252,7 +250,7 @@ public class ListViewCalc extends Application {
 		Text lengthChange = new Text("Select new length: ");
 
 		TextField nameBox = new TextField();
-		nameBox.setText(classes.get(index).getName());
+		nameBox.setText(cla.getName());
 		ComboBox<Object> gradeBox = new ComboBox<Object>(gradeOptions);
 		ComboBox<Object> lengthBox = new ComboBox<Object>(lengthOptions);
 
@@ -260,15 +258,15 @@ public class ListViewCalc extends Application {
 
 		affirm.setOnAction(e -> { // this works for this method because it's a completely optional one.
 			if (!nameBox.getText().isEmpty()) {
-				classes.get(index).setName(nameBox.getText());
+				cla.setName(nameBox.getText());
 			}
 
 			if (!(gradeBox.getSelectionModel().isEmpty())) {
-				classes.get(index).setGrade(gradeBox.getSelectionModel().getSelectedItem().toString());
+				cla.setGrade(gradeBox.getSelectionModel().getSelectedItem().toString());
 			}
 
 			if (!(lengthBox.getSelectionModel().isEmpty())) {
-				classes.get(index).setLength(lengthBox.getSelectionModel().getSelectedItem().toString());
+				cla.setLength(lengthBox.getSelectionModel().getSelectedItem().toString());
 			}
 
 			edit.close();
@@ -279,7 +277,7 @@ public class ListViewCalc extends Application {
 		editGP.setPadding(new Insets(10));
 		editGP.setVgap(5);
 		editGP.setHgap(5);
-		
+
 		editGP.add(nameChange, 1, 0);
 		editGP.add(gradeChange, 1, 1);
 		editGP.add(lengthChange, 1, 2);
@@ -289,7 +287,7 @@ public class ListViewCalc extends Application {
 		editGP.add(lengthBox, 2, 2);
 
 		editGP.add(affirm, 1, 3, 2, 1);
-		GridPane.setValignment(affirm, VPos.CENTER);
+		GridPane.setHalignment(affirm, HPos.CENTER);
 
 		Scene editSC = new Scene(editGP);
 
@@ -311,13 +309,13 @@ public class ListViewCalc extends Application {
 	 * @param index
 	 */
 	public static void delete(int index) {
-		
+
 		Alert warning = new Alert(AlertType.CONFIRMATION);
 		warning.setHeaderText("Delete a class");
 		warning.setContentText("Are you sure you want to do this?");
-		
+
 		Optional<ButtonType> affirm = warning.showAndWait();
-		if(affirm.get() == ButtonType.OK) {
+		if (affirm.get() == ButtonType.OK) {
 			classes.remove(index);
 			update();
 		}
@@ -340,8 +338,8 @@ public class ListViewCalc extends Application {
 	}
 
 	/**
-	 * Only called when the user is making a risky decision. Creates a warning
-	 * window with all relevant information.
+	 * Only called to alert the user. Doesn't give them a choice about it -
+	 * essentially an error window without an error.
 	 * 
 	 * @param warningType
 	 * @param warningMessage
@@ -350,7 +348,7 @@ public class ListViewCalc extends Application {
 		final Alert warning = new Alert(AlertType.WARNING);
 		warning.setHeaderText(warningType);
 		warning.setContentText(warningMessage);
-		
+
 		warning.showAndWait();
 	}
 

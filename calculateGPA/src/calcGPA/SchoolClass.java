@@ -22,6 +22,10 @@ public class SchoolClass {
 
 	}
 
+	public SchoolClass() {
+		System.out.println("I IS NULL");
+	}
+
 	/**
 	 * Sets name of the class.
 	 * 
@@ -144,7 +148,7 @@ public class SchoolClass {
 	 * 
 	 * @return
 	 */
-	public double getGPA() {
+	public double getGradeAverage() {
 		double GPA = gradeCalc / lengthCalc;
 		return GPA;
 	}
