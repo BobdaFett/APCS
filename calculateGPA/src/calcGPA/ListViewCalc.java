@@ -84,7 +84,7 @@ public class ListViewCalc extends Application {
 				if (index < 0) {
 					warningWindow("Nothing Selected", "Please select a class to continue.");
 				} else {
-					delete(index);
+					delete(school);
 				}
 				break;
 			default:
@@ -136,7 +136,7 @@ public class ListViewCalc extends Application {
 
 		lv.setOnMouseClicked(mouse -> {
 			if (mouse.getButton() == MouseButton.PRIMARY) {
-				school = lv.getSelectionModel().getSelectedItem();
+				school = lv.getSelectionModel().getSelectedItem(); // sets school equal to the SchoolClass object that's selected.
 			}
 			if (mouse.getButton() == MouseButton.PRIMARY && mouse.getClickCount() == 2) {
 				edit(school);
@@ -230,13 +230,14 @@ public class ListViewCalc extends Application {
 	 * WIP - create separate assignments that will also affect your grade.
 	 * 
 	 * @param index
+	 * @return 
 	 */
-	public static void edit(SchoolClass cla) {
+	public static SchoolClass edit(SchoolClass cla) {
 
 		// TODO Create a way to make individual assignments in each class - after that make it so that each score can be weighted differently.
 
 		if (school == null)
-			school = new SchoolClass();
+			create();
 
 		Stage edit = new Stage();
 		GridPane editGP = new GridPane();
@@ -266,7 +267,7 @@ public class ListViewCalc extends Application {
 			if (!(lengthBox.getSelectionModel().isEmpty())) {
 				school.setLength(lengthBox.getSelectionModel().getSelectedItem().toString());
 			}
-
+			
 			edit.close();
 
 			update();
@@ -306,7 +307,7 @@ public class ListViewCalc extends Application {
 	 * 
 	 * @param index
 	 */
-	public static void delete(int index) {
+	public static void delete(SchoolClass cla) {
 
 		Alert warning = new Alert(AlertType.CONFIRMATION);
 		warning.setHeaderText("Delete a class");
@@ -314,7 +315,7 @@ public class ListViewCalc extends Application {
 
 		Optional<ButtonType> affirm = warning.showAndWait();
 		if (affirm.get() == ButtonType.OK) {
-			classes.remove(index);
+			classes.remove(cla);
 			update();
 		}
 
