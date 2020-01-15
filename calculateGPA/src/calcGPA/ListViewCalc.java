@@ -118,7 +118,7 @@ public class ListViewCalc extends Application {
 			if (index < 0) {
 				warningWindow("Nothing Selected", "Please select a class to continue.");
 			} else {
-				delete(index);
+				delete(school);
 			}
 		});
 
@@ -232,7 +232,7 @@ public class ListViewCalc extends Application {
 	 * @param index
 	 * @return 
 	 */
-	public static SchoolClass edit(SchoolClass cla) {
+	public static void edit(SchoolClass cla) {
 
 		// TODO Create a way to make individual assignments in each class - after that make it so that each score can be weighted differently.
 
