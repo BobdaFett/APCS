@@ -1,4 +1,4 @@
-package calcGPA;
+package objects;
 
 public class SchoolClass {
 

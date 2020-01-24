@@ -13,15 +13,16 @@ import javafx.stage.Stage;
 
 public class TestBankAccount extends Application {
 	
-	public static TableView tv;
+	public static TableView<ManagedAccount> tv;
 	
+	@SuppressWarnings("unchecked")
 	public void start(Stage s) throws Exception {
 		
-		TableColumn<ManagedAccount, String> tName = new TableColumn<ManagedAccount, String>();
-		tName.setCellValueFactory(new PropertyValueFactory("name"));
+		TableColumn<ManagedAccount, String> tName = new TableColumn<ManagedAccount, String>("Name");
+		tName.setCellValueFactory(new PropertyValueFactory<ManagedAccount, String>("name"));
 		
-		TableColumn<ManagedAccount, String> tBalance = new TableColumn<ManagedAccount, String>();
-		tBalance.setCellValueFactory(new PropertyValueFactory("balance"));
+		TableColumn<ManagedAccount, String> tBalance = new TableColumn<ManagedAccount, String>("Balance");
+		tBalance.setCellValueFactory(new PropertyValueFactory<ManagedAccount, String>("balance"));
 		
 		Menu file = new Menu("_File");
 		MenuItem file1 = new MenuItem("Create...");
@@ -36,8 +37,11 @@ public class TestBankAccount extends Application {
 		MenuBar mb = new MenuBar();
 		mb.getMenus().addAll(file, edit);
 		
-		tv = new TableView(); // need to bind the size of this to the constraints of the window.
+		tv = new TableView<ManagedAccount>();
+		tv.prefHeightProperty().bind(s.heightProperty());
+		tv.prefWidthProperty().bind(s.widthProperty());
 		tv.getColumns().addAll(tName, tBalance);
+		tv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
 		GridPane gp = new GridPane();
 		gp.add(mb, 0, 0);

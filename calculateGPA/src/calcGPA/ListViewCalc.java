@@ -7,9 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -22,13 +20,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import objects.SchoolClass;
 
 /**
  * A testing area - train wrecks are ok here :D
@@ -58,23 +56,24 @@ public class ListViewCalc extends Application {
 		gradeOptions = FXCollections.observableArrayList("A+", "A", "B+", "B", "C+", "C", "D", "F+", "F");
 		lengthOptions = FXCollections.observableArrayList("Half Year", "Full Year");
 
+		
+
+		TableColumn<SchoolClass, String> NColumn = new TableColumn<SchoolClass, String>("Class");
+		NColumn.setCellValueFactory(new PropertyValueFactory<SchoolClass, String>("name"));
+
+		TableColumn<SchoolClass, String> GColumn = new TableColumn<SchoolClass, String>("Grade");
+		GColumn.setCellValueFactory(new PropertyValueFactory<SchoolClass, String>("gradeVerbose"));
+
+		TableColumn<SchoolClass, String> LColumn = new TableColumn<SchoolClass, String>("Length");
+		LColumn.setCellValueFactory(new PropertyValueFactory<SchoolClass, String>("lengthVerbose"));
+
+		TableColumn<SchoolClass, String> GPAColumn = new TableColumn<SchoolClass, String>("GPA");
+		GPAColumn.setCellValueFactory(new PropertyValueFactory<SchoolClass, String>("gradeAverage"));
+
 		lv = new TableView<SchoolClass>(classes);
 		lv.prefWidthProperty().bind(s.widthProperty());
 		lv.prefHeightProperty().bind(s.heightProperty());
 		lv.setPlaceholder(new Label("Click File > Create to make a new Class"));
-
-		TableColumn<SchoolClass, String> NColumn = new TableColumn<>("Class");
-		NColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-		TableColumn<SchoolClass, String> GColumn = new TableColumn<>("Grade");
-		GColumn.setCellValueFactory(new PropertyValueFactory<>("gradeVerbose"));
-
-		TableColumn<SchoolClass, String> LColumn = new TableColumn<>("Length");
-		LColumn.setCellValueFactory(new PropertyValueFactory<>("lengthVerbose"));
-
-		TableColumn<SchoolClass, String> GPAColumn = new TableColumn<>("GPA");
-		GPAColumn.setCellValueFactory(new PropertyValueFactory<>("gradeAverage"));
-
 		lv.getColumns().addAll(NColumn, GColumn, LColumn, GPAColumn);
 		lv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -225,7 +224,7 @@ public class ListViewCalc extends Application {
 	}
 
 	/**
-	 * Creates a window that allows the user to edit the selected TableView index.
+	 * Creates a window that allows the user to edit the selected SchoolClass.
 	 * 
 	 * WIP - create separate assignments that will also affect your grade.
 	 * 
