@@ -56,8 +56,7 @@ public class ListViewCalc extends Application {
 		gradeOptions = FXCollections.observableArrayList("A+", "A", "B+", "B", "C+", "C", "D", "F+", "F");
 		lengthOptions = FXCollections.observableArrayList("Half Year", "Full Year");
 
-		
-
+		// instantiate all of the Columns for the TableView
 		TableColumn<SchoolClass, String> NColumn = new TableColumn<SchoolClass, String>("Class");
 		NColumn.setCellValueFactory(new PropertyValueFactory<SchoolClass, String>("name"));
 
@@ -70,11 +69,14 @@ public class ListViewCalc extends Application {
 		TableColumn<SchoolClass, String> GPAColumn = new TableColumn<SchoolClass, String>("GPA");
 		GPAColumn.setCellValueFactory(new PropertyValueFactory<SchoolClass, String>("gradeAverage"));
 
+		// adds all properties that are needed to the TableView
 		lv = new TableView<SchoolClass>(classes);
+		lv.getColumns().addAll(NColumn, GColumn, LColumn, GPAColumn);
+		lv.setPlaceholder(new Label("Click File > Create to make a new Class"));
+
+		// sets the size of the TableView in the window, and the resize policy
 		lv.prefWidthProperty().bind(s.widthProperty());
 		lv.prefHeightProperty().bind(s.heightProperty());
-		lv.setPlaceholder(new Label("Click File > Create to make a new Class"));
-		lv.getColumns().addAll(NColumn, GColumn, LColumn, GPAColumn);
 		lv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		lv.setOnKeyPressed(key -> {
@@ -91,8 +93,7 @@ public class ListViewCalc extends Application {
 			}
 		});
 
-		// there should be something here
-
+		// creates all of the tabs for the window
 		MenuItem file1 = new MenuItem("Create Class");
 		file1.setOnAction(e -> {
 			create();
@@ -157,6 +158,7 @@ public class ListViewCalc extends Application {
 		gp.add(mb, 0, 0);
 		gp.add(lv, 0, 1);
 
+		// set the scene and show the window
 		Scene sc = new Scene(gp);
 
 		s.setMaximized(true);
@@ -171,6 +173,7 @@ public class ListViewCalc extends Application {
 	 */
 	public static void create() {
 
+		// create all of the base components
 		Stage create = new Stage();
 		GridPane gCreate = new GridPane();
 		Button affirm = new Button("Create");
@@ -184,6 +187,7 @@ public class ListViewCalc extends Application {
 		ComboBox<Object> iGrade = new ComboBox<Object>(gradeOptions);
 		ComboBox<Object> iLength = new ComboBox<Object>(lengthOptions);
 
+		// add everything into the window
 		gCreate.setPadding(new Insets(10));
 		gCreate.setVgap(5);
 		gCreate.setHgap(5);
@@ -217,6 +221,7 @@ public class ListViewCalc extends Application {
 
 		});
 
+		// set scene and show windows
 		Scene sCreate = new Scene(gCreate);
 		create.setScene(sCreate);
 		create.show();
@@ -235,9 +240,11 @@ public class ListViewCalc extends Application {
 
 		// TODO Create a way to make individual assignments in each class - after that make it so that each score can be weighted differently.
 
+		// tells this method that it doesn't need to execute if there's no object selected.
 		if (school == null)
-			create();
+			create(); // this seems to throw an error every time... but doesn't actually break anything
 
+		// create all base components
 		Stage edit = new Stage();
 		GridPane editGP = new GridPane();
 		Button affirm = new Button("Save");
@@ -272,6 +279,7 @@ public class ListViewCalc extends Application {
 			update();
 		});
 
+		// add everything to the window
 		editGP.setPadding(new Insets(10));
 		editGP.setVgap(5);
 		editGP.setHgap(5);
@@ -287,6 +295,7 @@ public class ListViewCalc extends Application {
 		editGP.add(affirm, 1, 3, 2, 1);
 		GridPane.setHalignment(affirm, HPos.CENTER);
 
+		// set scene and show window
 		Scene editSC = new Scene(editGP);
 
 		edit.setScene(editSC);
@@ -308,6 +317,7 @@ public class ListViewCalc extends Application {
 	 */
 	public static void delete(SchoolClass cla) {
 
+		// creates window
 		Alert warning = new Alert(AlertType.CONFIRMATION);
 		warning.setHeaderText("Delete a class");
 		warning.setContentText("Are you sure you want to do this?");
@@ -328,6 +338,7 @@ public class ListViewCalc extends Application {
 	 * @param message
 	 */
 	public static void errorWindow(String errorType, String message) { // error window method
+		// creates window
 		Alert error = new Alert(AlertType.ERROR);
 		error.setHeaderText(errorType);
 		error.setContentText(message);
@@ -343,6 +354,7 @@ public class ListViewCalc extends Application {
 	 * @param warningMessage
 	 */
 	public static void warningWindow(String warningType, String warningMessage) {
+		// creates window
 		final Alert warning = new Alert(AlertType.WARNING);
 		warning.setHeaderText(warningType);
 		warning.setContentText(warningMessage);
