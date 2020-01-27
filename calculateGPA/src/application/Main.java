@@ -27,7 +27,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import objects.SchoolClass;
-import objects.Assignment;
 
 /**
  * Main application - all working changes go here.
@@ -52,12 +51,10 @@ public class Main extends Application {
 	 */
 	@SuppressWarnings("unchecked")
 	public void start(Stage s) throws Exception {
-		
+
 		classes = FXCollections.observableArrayList();
 		gradeOptions = FXCollections.observableArrayList("A+", "A", "B+", "B", "C+", "C", "D", "F+", "F");
 		lengthOptions = FXCollections.observableArrayList("Half Year", "Full Year");
-
-		
 
 		TableColumn<SchoolClass, String> NColumn = new TableColumn<SchoolClass, String>("Class");
 		NColumn.setCellValueFactory(new PropertyValueFactory<SchoolClass, String>("name"));
@@ -136,7 +133,8 @@ public class Main extends Application {
 
 		lv.setOnMouseClicked(mouse -> {
 			if (mouse.getButton() == MouseButton.PRIMARY) {
-				school = lv.getSelectionModel().getSelectedItem(); // sets school equal to the SchoolClass object that's selected.
+				school = lv.getSelectionModel().getSelectedItem(); // sets school equal to the SchoolClass object that's
+																	// selected.
 			}
 			if (mouse.getButton() == MouseButton.PRIMARY && mouse.getClickCount() == 2) {
 				edit(school);
@@ -205,7 +203,8 @@ public class Main extends Application {
 				create.close();
 				create();
 			} else {
-				SchoolClass c = new SchoolClass(iName.getText()); // need to change this - it's creating classes without names.
+				SchoolClass c = new SchoolClass(iName.getText()); // need to change this - it's creating classes without
+																	// names.
 				if (!iGrade.getSelectionModel().isEmpty()) {
 					c.setGrade(iGrade.getSelectionModel().getSelectedItem().toString());
 				}
@@ -230,11 +229,12 @@ public class Main extends Application {
 	 * WIP - create separate assignments that will also affect your grade.
 	 * 
 	 * @param index
-	 * @return 
+	 * @return
 	 */
 	public static void edit(SchoolClass cla) {
 
-		// TODO Create a way to make individual assignments in each class - after that make it so that each score can be weighted differently.
+		// TODO Create a way to make individual assignments in each class - after that
+		// make it so that each score can be weighted differently.
 
 		if (school == null)
 			create();
@@ -267,7 +267,7 @@ public class Main extends Application {
 			if (!(lengthBox.getSelectionModel().isEmpty())) {
 				school.setLength(lengthBox.getSelectionModel().getSelectedItem().toString());
 			}
-			
+
 			edit.close();
 
 			update();
