@@ -5,6 +5,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -36,13 +39,61 @@ public class Main extends Application {
 		tv.setPlaceholder(new Label("Click File > Add new... to add a patient"));
 		tv.getColumns().addAll(t1, t2);
 
+		Menu file = new Menu("_File");
+		MenuItem f1 = new MenuItem("Add new...");
+		f1.setOnAction(e -> {
+			patients.add(edit(new Patient()));
+		});
+		MenuItem f2 = new MenuItem("Close");
+		f2.setOnAction(e -> {
+			s.close();
+		});
+		file.getItems().addAll(f1, f2);
+
+		Menu edit = new Menu("_Edit");
+		MenuItem e1 = new MenuItem("Edit...");
+		e1.setOnAction(e -> {
+			edit(tv.getSelectionModel().getSelectedItem());
+		});
+		MenuItem e2 = new MenuItem("Delete");
+		e1.setOnAction(e -> {
+			delete(tv.getSelectionModel().getSelectedItem());
+		});
+		edit.getItems().addAll(e1, e2);
+
+		MenuBar mb = new MenuBar();
+		mb.getMenus().addAll(file, edit);
+
 		GridPane gp = new GridPane();
-		gp.add(tv, 0, 0);
+		gp.add(mb, 0, 0);
+		gp.add(tv, 0, 1);
 
 		Scene sc = new Scene(gp);
 		s.setScene(sc);
+		s.setMaximized(true);
 		s.show();
 
+	}
+
+	/**
+	 * Allows the user to both create and edit a Patient.
+	 * 
+	 * @param p
+	 * @return
+	 */
+	public static Patient edit(Patient p) {
+
+		return p;
+
+	}
+
+	/**
+	 * Allows the user to delete a Patient.
+	 * 
+	 * @param p
+	 */
+	public static void delete(Patient p) {
+		patients.remove(p);
 	}
 
 	public static void main(String[] args) {

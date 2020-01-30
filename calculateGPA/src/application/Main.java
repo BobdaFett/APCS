@@ -106,7 +106,7 @@ public class Main extends Application {
 			if (index < 0) {
 				warningWindow("Nothing Selected", "Please select a class to continue.");
 			} else {
-				edit(lv.getSelectionModel().getSelectedItem());
+				edit(school);
 			}
 		});
 

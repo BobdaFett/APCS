@@ -9,7 +9,7 @@ public class Test extends Assignment {
 		this.name = name;
 	}
 
-	public Test(String Name, int grade) {
+	public Test(String name, int grade) {
 		this.name = name;
 		this.grade = grade;
 	}
