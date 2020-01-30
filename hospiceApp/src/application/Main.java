@@ -3,15 +3,22 @@ package application;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import objects.Patient;
 
@@ -83,6 +90,46 @@ public class Main extends Application {
 	 */
 	public static Patient edit(Patient p) {
 
+		Stage edit = new Stage();
+		GridPane gpEdit = new GridPane();
+
+		Button affirm = new Button("Submit");
+		affirm.setDefaultButton(true);
+
+		Text name = new Text("Enter a name:");
+		Text age = new Text("Enter an age:");
+		TextField nEdit = new TextField();
+		TextField aEdit = new TextField();
+
+		Accordion misc = new Accordion();
+		TitledPane meds = new TitledPane("Medications", new Label("List of medications"));
+		TitledPane docs = new TitledPane("Caretakers", new Label("List of caretakers"));
+		misc.getPanes().addAll(meds, docs);
+
+		GridPane tfgp = new GridPane();
+		tfgp.add(name, 0, 0);
+		tfgp.add(age, 0, 1);
+		tfgp.add(nEdit, 1, 0);
+		tfgp.add(aEdit, 1, 1);
+		tfgp.setHgap(10);
+		tfgp.setVgap(10);
+
+		GridPane agp = new GridPane();
+		agp.add(misc, 0, 0);
+
+		gpEdit.add(tfgp, 0, 0);
+		gpEdit.add(agp, 1, 0);
+		gpEdit.add(affirm, 0, 1, 2, 1);
+		GridPane.setHalignment(affirm, HPos.CENTER);
+
+		gpEdit.setPadding(new Insets(10));
+		gpEdit.setHgap(10);
+		gpEdit.setVgap(10);
+
+		Scene scEdit = new Scene(gpEdit);
+		edit.setScene(scEdit);
+		edit.show();
+
 		return p;
 
 	}
@@ -98,5 +145,6 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+
 	}
 }
