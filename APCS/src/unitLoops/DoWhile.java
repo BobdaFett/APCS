@@ -45,11 +45,11 @@ public class DoWhile {
 		Collections.swap(e, a, b);
 	}
 
-	public static <T> T max(ArrayList<T> e) {
-		T max = null;
-		for (T i : e) {
-			if (i > max) //idk how to fix this
-				max = i;
-		}
-	}
+	//	public static <T> T max(ArrayList<T> e) {
+	//		T max = null;
+	//		for (T i : e) {
+	//			if (i > max) //idk how to fix this
+	//				max = i;
+	//		}
+	//	}
 }

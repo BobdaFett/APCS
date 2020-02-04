@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -27,11 +28,16 @@ public class Main extends Application {
 	public TableView<Patient> tv;
 	public static ObservableList<Patient> patients;
 
+	public static ObservableList<Integer> ageOptions;
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void start(Stage s) {
 
 		patients = FXCollections.observableArrayList();
+		ageOptions = FXCollections.observableArrayList();
+		for (int i = 1; i <= 100; i++)
+			ageOptions.add(i);
 
 		TableColumn<Patient, String> t1 = new TableColumn<Patient, String>("Name Thingy");
 		t1.setCellValueFactory(new PropertyValueFactory<Patient, String>("name"));
@@ -87,6 +93,7 @@ public class Main extends Application {
 	 * 
 	 * @param p
 	 * @return
+	 * @return
 	 */
 	public static Patient edit(Patient p) {
 
@@ -99,7 +106,8 @@ public class Main extends Application {
 		Text name = new Text("Enter a name:");
 		Text age = new Text("Enter an age:");
 		TextField nEdit = new TextField();
-		TextField aEdit = new TextField();
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		ComboBox aEdit = new ComboBox(ageOptions);
 
 		Accordion misc = new Accordion();
 		TitledPane meds = new TitledPane("Medications", new Label("List of medications"));
@@ -125,6 +133,12 @@ public class Main extends Application {
 		gpEdit.setPadding(new Insets(10));
 		gpEdit.setHgap(10);
 		gpEdit.setVgap(10);
+
+		affirm.setOnAction(e -> {
+			p.setName(nEdit.getText());
+			p.setAge(aEdit.getSelectionModel().getSelectedItem()); // need to fill this somehow
+			edit.close();
+		});
 
 		Scene scEdit = new Scene(gpEdit);
 		edit.setScene(scEdit);
