@@ -30,6 +30,7 @@ public class Cashier extends Application {
 	 * @param s
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public void start(Stage s) throws Exception {
 
 		tv = new TableView<Item>(items);
