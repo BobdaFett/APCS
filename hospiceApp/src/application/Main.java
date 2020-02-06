@@ -34,6 +34,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage s) {
 
+		int test = 10;
+
 		patients = FXCollections.observableArrayList();
 		ageOptions = FXCollections.observableArrayList();
 		for (int i = 1; i <= 100; i++)
@@ -136,7 +138,7 @@ public class Main extends Application {
 
 		affirm.setOnAction(e -> {
 			p.setName(nEdit.getText());
-			p.setAge(aEdit.getSelectionModel().getSelectedItem()); // need to fill this somehow
+			p.setAge(1); // need to fill this somehow
 			edit.close();
 		});
 
