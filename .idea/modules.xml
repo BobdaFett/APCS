@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/APCS.iml" filepath="$PROJECT_DIR$/.idea/APCS.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Test/Test.iml" filepath="$PROJECT_DIR$/Test/Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/APCS/APCS.iml" filepath="$PROJECT_DIR$/APCS/APCS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/checkoutClass/checkoutClass.iml" filepath="$PROJECT_DIR$/checkoutClass/checkoutClass.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hospiceApp/hospiceApp.iml" filepath="$PROJECT_DIR$/hospiceApp/hospiceApp.iml" />
     </modules>
   </component>
 </project>
