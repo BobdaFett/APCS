@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/APCS/APCS.iml" filepath="$PROJECT_DIR$/APCS/APCS.iml" />
       <module fileurl="file://$PROJECT_DIR$/checkoutClass/checkoutClass.iml" filepath="$PROJECT_DIR$/checkoutClass/checkoutClass.iml" />
-      <module fileurl="file://$PROJECT_DIR$/hospiceApp/hospiceApp.iml" filepath="$PROJECT_DIR$/hospiceApp/hospiceApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dayPlanner.iml" filepath="$PROJECT_DIR$/dayPlanner.iml" />
     </modules>
   </component>
 </project>
